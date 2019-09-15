@@ -12,7 +12,9 @@ $color-animation-delay: 700ms;
 $color-animation-type: ease-in-out;
 .side-bar {
     height: 100vh;
-    position: relative;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
     width: 150px;
     overflow: hidden;
     @include transition( width $width-animation-delay $width-animation-type, background-color $color-animation-delay $color-animation-type);
