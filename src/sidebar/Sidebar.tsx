@@ -104,6 +104,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                 <div className='side-bar_element' style={elemStyle} key='element_${index}' onClick={(event) => this.handleClick(event, el, index)}>
                     <Icon className={iconClass} path={el.icon} size={3} />
                     <p className={textClass}>{el.title}</p>
+                    {/* <span className='action-description'>{el.description}</span> */}
                 </div>
             )
         })

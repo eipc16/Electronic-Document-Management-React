@@ -12,7 +12,7 @@ $color-animation-delay: 700ms;
 $color-animation-type: ease-in-out;
 .side-bar {
     height: 100vh;
-    position: sticky;
+    position: relative;
     width: 150px;
     overflow: hidden;
     @include transition( width $width-animation-delay $width-animation-type, background-color $color-animation-delay $color-animation-type);
@@ -36,6 +36,7 @@ $color-animation-type: ease-in-out;
 
 .elements_container {
     height: 90%;
+    position: relative;
     overflow-y: scroll;
     overflow-x: hidden;
     box-sizing: content-box;
@@ -50,6 +51,7 @@ $color-animation-type: ease-in-out;
     width: 100%;
     margin-bottom: 1px;
     white-space: nowrap;
+    position: relative;
     overflow: hidden;
     display: inline-flex;
 }
@@ -81,6 +83,13 @@ $color-animation-type: ease-in-out;
         margin-left: 5px;
         @include transition(opacity 450ms $width-animation-delay ease-in, width $width-animation-delay 0s ease-out);
     }
+}
+
+.action-description {
+    position: absolute;
+    left: 100px;
+    z-index: 1000;
+    font-size: 2em;
 }
 
 .icon {
