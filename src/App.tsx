@@ -4,7 +4,7 @@ import './App.css';
 
 import Sidebar, { SidebarVisibility } from './sidebar/Sidebar';
 
-import { mdiAccessPoint, mdiAccount } from '@mdi/js';
+import { mdiLoading, mdiLogin, mdiLogout, mdiFileDocument, mdiAccount, mdiFacebook, mdiFace, mdiGoogle, mdiApple, mdiSmoking, mdiSend, mdiWarehouse, mdiWalk, mdiForum } from '@mdi/js';
 
 import Alert from 'react-s-alert';
 
@@ -16,7 +16,7 @@ const App: React.FC = () => {
   const elementsList = [
   {
     title: "Long title 1",
-    icon: mdiAccessPoint,
+    icon: mdiLoading,
     description: "1",
     onclick: () => Alert.error('Co tam słychać o jak fajnie tutaj se testujemy alerty co dzialaja tak fajnie')
   },
@@ -28,58 +28,58 @@ const App: React.FC = () => {
     noHighlight: true
   },  {
     title: "Long title 3",
-    icon: mdiAccessPoint,
+    icon: mdiLogin,
     description: "4",
     onclick: () => Alert.warning('1'),
     noHighlight: false
   },  {
     title: "Long title 4",
-    icon: mdiAccessPoint,
+    icon: mdiLogout,
     description: "5",
     onclick: () => Alert.success('1')
   },  {
     title: "Long title 5",
-    icon: mdiAccessPoint,
+    icon: mdiFace,
     description: "6",
     onclick: () => Alert.info('1')
   },  {
     title: "Long title 6",
-    icon: mdiAccessPoint,
+    icon: mdiFacebook,
     description: "7",
     onclick: () => Alert.info('1')
   },  {
     title: "Long title 7",
-    icon: mdiAccessPoint,
+    icon: mdiGoogle,
     description: "8",
     onclick: () => Alert.info('1')
   },  {
     title: "Long title 8",
-    icon: mdiAccessPoint,
+    icon: mdiApple,
     description: "9",
     onclick: () => Alert.info('1')
   },  {
     title: "Long title 9",
-    icon: mdiAccessPoint,
+    icon: mdiSmoking,
     description: "11",
     onclick: () => Alert.info('1')
   },  {
     title: "Long title 10",
-    icon: mdiAccessPoint,
+    icon: mdiSend,
     description: "12",
     onclick: () => Alert.info('1')
   },  {
     title: "Long title 11",
-    icon: mdiAccessPoint,
+    icon: mdiWarehouse,
     description: "13",
     onclick: () => Alert.info('1')
   },  {
     title: "Long title 12",
-    icon: mdiAccessPoint,
+    icon: mdiWalk,
     description: "14",
     onclick: () => Alert.info('1')
   },  {
     title: "Long title 13",
-    icon: mdiAccessPoint,
+    icon: mdiForum,
     description: "15",
     onclick: () => Alert.info('14')
   },
