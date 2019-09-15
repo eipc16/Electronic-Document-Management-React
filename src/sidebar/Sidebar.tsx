@@ -17,7 +17,8 @@ export interface SidebarElement {
     title: string,
     icon: string,
     description: string,
-    onclick: () => void
+    onclick: () => void,
+    noHighlight?: boolean
 }
 
 interface SidebarProps {
@@ -83,7 +84,10 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
 
     private handleClick(event: React.MouseEvent, element: SidebarElement, index: number) {
         event.preventDefault();
-        this.setSelected(index);
+
+        if(!element.noHighlight) {
+            this.setSelected(index);
+        }
         element.onclick();
     }
 

@@ -24,12 +24,14 @@ const App: React.FC = () => {
     title: "Another long title",
     icon: mdiAccount,
     description: "3",
-    onclick: () => Alert.info('2')
+    onclick: () => Alert.info('2'),
+    noHighlight: true
   },  {
     title: "Long title 3",
     icon: mdiAccessPoint,
     description: "4",
-    onclick: () => Alert.warning('1')
+    onclick: () => Alert.warning('1'),
+    noHighlight: false
   },  {
     title: "Long title 4",
     icon: mdiAccessPoint,

@@ -47,11 +47,13 @@ $color-animation-type: ease-in-out;
     &::-webkit-scrollbar {
         display: none;
     }
+    padding: 5px 5px 5px 5px;
 }
 
 .side-bar_element {
+    border-radius: 3px;
     width: 100%;
-    margin-bottom: 1px;
+    margin-bottom: 2px;
     white-space: nowrap;
     position: relative;
     overflow: hidden;
@@ -59,6 +61,8 @@ $color-animation-type: ease-in-out;
 }
 
 .action-icon {
+    border-radius: 10px;
+    position: relative;
     &.default {
         width: 48px;
         height: 48px;
@@ -71,8 +75,10 @@ $color-animation-type: ease-in-out;
 
 .action-title {
     font-size: 1.25rem;
-    font-weight: bold;
+    color: white;
     text-transform: uppercase;
+    overflow-x: hidden;
+    font-family: 'Roboto', sans-serif;
     &.default {
         width: 0%;
         opacity: 0;
@@ -135,6 +141,12 @@ $color-animation-type: ease-in-out;
             background-color: white;
         }
     }
+    &:focus {
+        &::after {
+            @include transition(opacity 0.4s ease-in);
+            opacity: 0.35;
+        }
+    }
 }
 
 .mode_switch {
@@ -150,6 +162,7 @@ $color-animation-type: ease-in-out;
     width: 100%;
     overflow: hidden;
     white-space: nowrap;
+    color: white;
 }
 
 .text.extended {
