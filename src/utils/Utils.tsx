@@ -5,3 +5,11 @@ export function hasUpperCase(text: string): boolean {
 export function hasLowerCase(text: string): boolean {
     return text.toUpperCase() != text
 }
+
+export function longerThan(text: string, limit: Number, inclusive?: boolean): boolean {
+    if(inclusive) {
+        return text.length >= limit
+    }
+
+    return text.length > limit
+}

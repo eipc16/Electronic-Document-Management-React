@@ -1,0 +1,25 @@
+.input-container {
+    display: block;
+    margin-top: 20px;
+}
+
+.input-field {
+    width: 360px;
+    height: 40px;
+    color: black;
+    font-size: 1.2rem;
+    border: 1px solid lightgrey;
+    border-radius: 1px;
+    padding: 5px 10px 5px 10px;
+    &.number {
+        text-align: right;
+    }
+    &.text {}
+    &.error {
+        border: 1px solid red;
+    }
+    &:active,
+    &:focus {
+        border: 2px solid blue;
+    }
+}

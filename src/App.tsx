@@ -10,6 +10,8 @@ import Alert from 'react-s-alert';
 import { NotificationBuilder, AlertEffects, AlertPositions, AlertTypes } from './notifications/Notification'
 
 import { TextField, NumberField } from "./wizards/inputs/InputFields";
+import { Validator } from './wizards/validators/Validator';
+import { noUpperCase, hasLengthGreaterThan6 } from './wizards/validators/ValidatorRules';
 
 const App: React.FC = () => {
 
@@ -94,12 +96,14 @@ const App: React.FC = () => {
                               .setTimeout(10000)
                               .build()
 
+  const myValidator: Validator = new Validator([noUpperCase, hasLengthGreaterThan6])
+
   return (
     <div className="App">
       <Sidebar className="side-bar" elements={elementsList}/>
       <div className="main-container">
           <p>Test</p>
-          <TextField />
+          <TextField validator={myValidator}/>
           <NumberField />
       </div>
     </div>
