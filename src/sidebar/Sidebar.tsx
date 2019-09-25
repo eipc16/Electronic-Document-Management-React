@@ -1,11 +1,9 @@
-import React, { StatelessComponent, CSSProperties } from 'react'
-import ReactDOM, { render } from 'react-dom'
+import React from 'react'
 
 import { mdiToggleSwitchOff, mdiToggleSwitch } from '@mdi/js'
 import { Icon } from '@mdi/react'
 
 import './SidebarStyles.scss'
-import { element } from 'prop-types';
 
 export enum SidebarVisibility {
     HIDDEN = "hidden",
@@ -22,6 +20,7 @@ export interface SidebarElement {
 }
 
 interface SidebarProps {
+    className?: string,
     elements: SidebarElement[],
     default_visiblity: SidebarVisibility,
     scrollable?: boolean,
@@ -43,6 +42,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
 
     public static defaultProps = {
         default_visiblity: SidebarVisibility.DEFAULT,
+        className: Sidebar.DEFAULT_CLASS,
         scrollable: true,
         color: "#0885de",
         accent: "#54aff0",
@@ -75,7 +75,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     }
 
     toggleVisibilityMode() {
-        const newMode: SidebarVisibility = this.state.visibility == SidebarVisibility.DEFAULT
+        const newMode: SidebarVisibility = this.state.visibility === SidebarVisibility.DEFAULT
                                         ? SidebarVisibility.EXTENDED
                                         : SidebarVisibility.DEFAULT;
 
@@ -105,7 +105,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
             }
 
             return (
-                <div className='side-bar_element' style={elemStyle} key='element_${index}' onClick={(event) => this.handleClick(event, el, index)}>
+                <div className='side-bar_element' style={elemStyle} key={`element_${index}`} onClick={(event) => this.handleClick(event, el, index)}>
                     <Icon className={iconClass} path={el.icon} size={3} />
                     <p className={textClass}>{el.title}</p>
                     {/* <span className='action-description'>{el.description}</span> */}
@@ -117,13 +117,13 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     }
     
     render() : JSX.Element {
-        const stateIcon: string = (this.state.visibility == SidebarVisibility.EXTENDED)
+        const stateIcon: string = (this.state.visibility === SidebarVisibility.EXTENDED)
                                         ? mdiToggleSwitchOff
                                         : mdiToggleSwitch
         
         let visibility = this.state.visibility.valueOf();
 
-        const sidebarClass = `${Sidebar.DEFAULT_CLASS} ${visibility}`
+        const sidebarClass = `${this.props.className} ${visibility}`
 
         const modeSwitchClass = `mode_switch ${visibility}`
 
