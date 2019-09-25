@@ -1,15 +1,15 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import './App.scss';
 
-import Sidebar, { SidebarVisibility } from './sidebar/Sidebar';
+import Sidebar from './sidebar/Sidebar';
 
-import { mdiLoading, mdiLogin, mdiLogout, mdiFileDocument, mdiAccount, mdiFacebook, mdiFace, mdiGoogle, mdiApple, mdiSmoking, mdiSend, mdiWarehouse, mdiWalk, mdiForum } from '@mdi/js';
+import { mdiLoading, mdiLogin, mdiLogout, mdiAccount, mdiFacebook, mdiFace, mdiGoogle, mdiApple, mdiSmoking, mdiSend, mdiWarehouse, mdiWalk, mdiForum } from '@mdi/js';
 
 import Alert from 'react-s-alert';
 
-import { Notification, NotificationBuilder, AlertEffects, AlertPositions, AlertTypes } from './notifications/Notification'
+import { NotificationBuilder, AlertEffects, AlertPositions, AlertTypes } from './notifications/Notification'
 
+import { TextField, NumberField } from "./wizards/inputs/InputFields";
 
 const App: React.FC = () => {
 
@@ -96,9 +96,12 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <Sidebar elements={elementsList}/>
-
-      <button onClick={ () => notification.show('test')} >Show alert</button>
+      <Sidebar className="side-bar" elements={elementsList}/>
+      <div className="main-container">
+          <p>Test</p>
+          <TextField />
+          <NumberField />
+      </div>
     </div>
   );
 }
