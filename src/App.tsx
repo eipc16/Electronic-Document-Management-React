@@ -26,7 +26,7 @@ import {
   AlertTypes
 } from './notifications/Notification';
 
-import { CustomTextField, NumberField } from './wizards/inputs/InputFields';
+import { CustomTextField } from './wizards/inputs/TextField';
 import { Validator } from './wizards/validators/Validator';
 import {
   noUpperCase,
@@ -141,7 +141,6 @@ const App: React.FC = () => {
       <div className="main-container">
         <p>Test</p>
         <CustomTextField label="Input Text" validator={myValidator} />
-        <NumberField />
       </div>
     </div>
   );

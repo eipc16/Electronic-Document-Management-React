@@ -36,7 +36,7 @@ export class Validator implements ValidatorInterface {
   }
 
   private getValidatorError(rule: ValidatorRule): ValidatorError {
-    const error : ValidatorError = {
+    const error: ValidatorError = {
       name: 'Iks de',
       message: rule.message
     }

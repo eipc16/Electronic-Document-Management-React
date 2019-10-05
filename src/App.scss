@@ -15,3 +15,8 @@
     display: block;
     width: 100%;
 }
+
+input:focus,
+input:active {
+    outline: none;
+}

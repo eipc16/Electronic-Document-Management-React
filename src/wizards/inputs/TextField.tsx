@@ -6,21 +6,40 @@ import { View } from 'react-native';
 import './InputFields.scss';
 import { HelperText, TextInput } from 'react-native-paper';
 
+export enum InputStyle {
+  FLAT = "flat",
+  OUTLINE = "outlined"
+}
+
+export enum InputType {
+    NUMBER = "numeric",
+    TEXT = "default",
+    EMAIL = "email-address"
+}
+
 interface TextFieldProps {
   label: string;
   placeholder?: string;
   defaultText?: string;
-  validator: Validator;
+  validator?: Validator;
+  type?: InputStyle;
+  inputType?: InputType;
 }
 
 const defaultTextFieldProps: TextFieldProps = {
   label: 'Label',
-  placeholder: 'gg',
-  defaultText: 'ff',
-  validator: new Validator([])
+  placeholder: '',
+  defaultText: '',
+  type: InputStyle.FLAT,
+  inputType: InputType.EMAIL
 };
 
-const CustomTextField: React.FC<TextFieldProps> = passedProps => {
+const defaultFieldStyle = {
+  "backgroundColor": "transparent",
+  "border-size": "5px"
+}
+
+export const CustomTextField: React.FC<TextFieldProps> = passedProps => {
   const props: TextFieldProps = {
     ...defaultTextFieldProps,
     ...passedProps
@@ -33,7 +52,10 @@ const CustomTextField: React.FC<TextFieldProps> = passedProps => {
 
   const setContentAndErrors = (value: string) => {
     setContent(value);
-    setErrors(props.validator.test(value));
+
+    if(props.validator) {
+      setErrors(props.validator.test(value));
+    }
   };
 
   let errorMessages: JSX.Element[] = [];
@@ -44,16 +66,22 @@ const CustomTextField: React.FC<TextFieldProps> = passedProps => {
     });
   }
 
+  const hasErrors = errorMessages.length > 0
+
   return (
     <div className="input-container">
       <View>
         <TextInput
           label={props.label}
           value={content}
+          error={hasErrors}
+          mode={props.type}
+          keyboardType={props.inputType}
           onChangeText={(text: string) => setContentAndErrors(text)}
+          style={defaultFieldStyle}
         />
 
-        <HelperText type="error" visible={errorMessages.length > 0}>
+        <HelperText type="error" visible={hasErrors}>
           {errorMessages}
         </HelperText>
       </View>
@@ -62,13 +90,3 @@ const CustomTextField: React.FC<TextFieldProps> = passedProps => {
 };
 
 CustomTextField.defaultProps = defaultTextFieldProps;
-
-const NumberField: React.FC = () => {
-  return (
-    <div className="input-container">
-      <input className="input-field number" type="number" />
-    </div>
-  );
-};
-
-export { CustomTextField, NumberField };
