@@ -75,7 +75,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     }
 
     toggleVisibilityMode() {
-        const newMode: SidebarVisibility = this.state.visibility === SidebarVisibility.DEFAULT
+        const newMode = this.state.visibility === SidebarVisibility.DEFAULT
                                         ? SidebarVisibility.EXTENDED
                                         : SidebarVisibility.DEFAULT;
 
@@ -141,7 +141,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                     {this.getElementsFromProps()}
                 </div>
 
-                <div className={modeSwitchClass} onClick={() => this.toggleVisibilityMode() }>
+                <div className={modeSwitchClass} onClick={() => this.toggleVisibilityMode()}>
                     <span className={textClass}>{Sidebar.MODE_SWITCH_TITLE}</span>
                     <Icon className={iconClass} path={stateIcon} size={2} />
                 </div>

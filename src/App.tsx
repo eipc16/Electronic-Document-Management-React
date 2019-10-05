@@ -9,7 +9,7 @@ import Alert from 'react-s-alert';
 
 import { NotificationBuilder, AlertEffects, AlertPositions, AlertTypes } from './notifications/Notification'
 
-import { TextField, NumberField } from "./wizards/inputs/InputFields";
+import { CustomTextField, NumberField } from "./wizards/inputs/InputFields";
 import { Validator } from './wizards/validators/Validator';
 import { noUpperCase, hasLengthGreaterThan6 } from './wizards/validators/ValidatorRules';
 
@@ -103,7 +103,7 @@ const App: React.FC = () => {
       <Sidebar className="side-bar" elements={elementsList}/>
       <div className="main-container">
           <p>Test</p>
-          <TextField validator={myValidator}/>
+          <CustomTextField label="Input Text" validator={myValidator}/>
           <NumberField />
       </div>
     </div>

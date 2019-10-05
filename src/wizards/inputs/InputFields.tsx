@@ -4,19 +4,24 @@ import { Validator, ValidatorError } from '../validators/Validator'
 import "./InputFields.scss"
 import { noUpperCase } from '../validators/ValidatorRules';
 
+import {View} from 'react-native';
+import {HelperText, TextInput} from 'react-native-paper'
+
 interface TextFieldProps {
+    label: string,
     placeholder?: string,
     defaultText?: string,
     validator: Validator
 }
 
 const defaultTextFieldProps: TextFieldProps = {
+    label: "Label",
     placeholder: "gg",
     defaultText: "ff",
     validator: new Validator([])
 }
 
-const TextField: React.FC<TextFieldProps> = (passedProps) => {
+const CustomTextField: React.FC<TextFieldProps> = (passedProps) => {
 
     const props: TextFieldProps = {
         ...defaultTextFieldProps,
@@ -26,7 +31,12 @@ const TextField: React.FC<TextFieldProps> = (passedProps) => {
     const [content, setContent] = useState<string>(props.defaultText ? props.defaultText : "");
     const [errors, setErrors] = useState<ValidatorError[]>([]);
 
-    let errorMessages;
+    let errorMessages: JSX.Element[] = [];
+
+    const setContentAndErrors = (value: string) => {
+        setContent(value)
+        setErrors(props.validator.test(value))
+    }
 
     if(props.validator) {
         errorMessages = errors.map((error, index) => {
@@ -36,24 +46,29 @@ const TextField: React.FC<TextFieldProps> = (passedProps) => {
         })
     }
 
+    const helperText = (
+        <HelperText type="error" visible={errorMessages.length > 0}>
+            {errorMessages}
+        </HelperText>
+    )
+
     return (
         <div className='input-container'>
-            <input 
-                className="input-field text" 
-                type="text"
+            <TextInput
+                label={props.label}
                 value={content}
-                placeholder={props.placeholder}
-                onChange={(e) => { setContent(e.target.value); setErrors(props.validator.test(e.target.value))}}
+                onChangeText={(text: string) => setContentAndErrors(text)} 
             />
-            {errorMessages}
+            {helperText}
         </div>
     )
 }
 
-TextField.defaultProps = defaultTextFieldProps;
+CustomTextField.defaultProps = defaultTextFieldProps;
 
 const NumberField: React.FC = () => {
     return (
+
         <div className='input-container'>
             <input className="input-field number" type="number" />
         </div>
@@ -61,6 +76,6 @@ const NumberField: React.FC = () => {
 }
 
 export {
-    TextField,
+    CustomTextField,
     NumberField
 }

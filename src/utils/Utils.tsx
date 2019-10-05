@@ -1,9 +1,9 @@
 export function hasUpperCase(text: string): boolean {
-    return text.toLowerCase() != text
+    return text.toLowerCase() !== text
 }
 
 export function hasLowerCase(text: string): boolean {
-    return text.toUpperCase() != text
+    return text.toUpperCase() !== text
 }
 
 export function longerThan(text: string, limit: Number, inclusive?: boolean): boolean {
