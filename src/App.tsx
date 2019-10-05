@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.scss';
 import Alert from 'react-s-alert';
 import CustomSidebar from './sidebar/Sidebar';
@@ -26,12 +26,15 @@ import {
   AlertTypes
 } from './notifications/Notification';
 
-import { CustomTextField } from './wizards/inputs/TextField';
+import { getInputFieldComponent } from './wizards/inputs/TextField';
 import { Validator } from './wizards/validators/Validator';
 import {
   noUpperCase,
   hasLengthGreaterThan6
 } from './wizards/validators/ValidatorRules';
+import { useDispatch } from 'react-redux';
+import { registerInputField, setFieldState } from './redux/actions';
+import { ActionBlocker } from './actionblocker/ActionBlocker';
 
 const App: React.FC = () => {
   const elementsList = [
@@ -137,10 +140,21 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
+      <ActionBlocker />
       <CustomSidebar className="side-bar" elements={elementsList} />
       <div className="main-container">
-        <p>Test</p>
-        <CustomTextField label="Input Text" validator={myValidator} />
+        {getInputFieldComponent({
+          label: "Fabrykowy",
+          defaultText: "Siema",
+          validator: myValidator,
+          uuid: "siema"
+        })}
+        {getInputFieldComponent({
+          label: "Fabrykowy",
+          defaultText: "Siema",
+          validator: myValidator,
+          uuid: "siffema"
+        })}
       </div>
     </div>
   );

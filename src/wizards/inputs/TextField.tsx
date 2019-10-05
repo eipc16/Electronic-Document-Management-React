@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
-import { Validator, ValidatorError } from '../validators/Validator';
-
+import { useSelector, useDispatch } from 'react-redux'
+import { Validator } from '../validators/Validator';
+import { createSelector } from 'reselect'
 import { View } from 'react-native';
+
+import uuid from 'uuid'
 
 import './InputFields.scss';
 import { HelperText, TextInput } from 'react-native-paper';
+
+import rootReducer from '../../redux/reducers'
+
+import {setFieldValue, setFieldValidationResults, registerInputField} from '../../redux/actions'
+import { InputFieldState, InputFieldsState } from '../../redux/types';
 
 export enum InputStyle {
   FLAT = "flat",
@@ -19,42 +27,66 @@ export enum InputType {
 
 interface TextFieldProps {
   label: string;
-  placeholder?: string;
+  uuid: string;
+  formUuid: string;
+  validator: Validator | undefined;
+  type: InputStyle;
+  inputType: InputType;
+  defaultText?: string;
+}
+
+export interface ExtendedTextFieldProps {
+  label: string;
+  uuid?: string;
+  formUuid?: string;
   defaultText?: string;
   validator?: Validator;
   type?: InputStyle;
   inputType?: InputType;
 }
 
-const defaultTextFieldProps: TextFieldProps = {
-  label: 'Label',
-  placeholder: '',
-  defaultText: '',
-  type: InputStyle.FLAT,
-  inputType: InputType.EMAIL
-};
-
 const defaultFieldStyle = {
   "backgroundColor": "transparent",
   "border-size": "5px"
 }
 
-export const CustomTextField: React.FC<TextFieldProps> = passedProps => {
-  const props: TextFieldProps = {
-    ...defaultTextFieldProps,
-    ...passedProps
-  };
+const getInputFieldByUuid = (fieldsState: InputFieldsState, uuid: string) => {
+  return fieldsState.inputFields[uuid]
+}
 
-  const [content, setContent] = useState<string>(
-    props.defaultText ? props.defaultText : ''
-  );
-  const [errors, setErrors] = useState<ValidatorError[]>([]);
+const getInputFieldByUuidSelector = createSelector(
+                                              (state: InputFieldsState) => state, 
+                                              (state: any, uuid: string) => uuid, 
+                                              getInputFieldByUuid)
+
+const TextField: React.FC<TextFieldProps> = props => {
+  const dispatch = useDispatch()
+  const [exists, setExists] = useState(false)
+  
+  if(!exists) {
+    dispatch(registerInputField({
+      uuid: props.uuid,
+      formUuid: props.formUuid,
+      name: props.label,
+      value: props.defaultText ? props.defaultText : '',
+      isValid: true,
+      errors: []
+    }))
+    
+    setExists(true)
+  }
+
+  const fieldState: InputFieldState = useSelector(
+    (state: ReturnType<typeof rootReducer>) => getInputFieldByUuidSelector(state.fields, props.uuid))
+
+  const {uuid, errors, isValid, name, value} = fieldState
 
   const setContentAndErrors = (value: string) => {
-    setContent(value);
-
+    dispatch(setFieldValue(uuid, value))
+    
     if(props.validator) {
-      setErrors(props.validator.test(value));
+      const validatorList = props.validator.test(value)
+      dispatch(setFieldValidationResults(uuid, validatorList))
     }
   };
 
@@ -66,22 +98,21 @@ export const CustomTextField: React.FC<TextFieldProps> = passedProps => {
     });
   }
 
-  const hasErrors = errorMessages.length > 0
-
   return (
     <div className="input-container">
       <View>
         <TextInput
-          label={props.label}
-          value={content}
-          error={hasErrors}
+          label={name}
+          key={uuid}
+          value={value.toString()}
+          error={!isValid}
           mode={props.type}
           keyboardType={props.inputType}
           onChangeText={(text: string) => setContentAndErrors(text)}
           style={defaultFieldStyle}
         />
 
-        <HelperText type="error" visible={hasErrors}>
+        <HelperText type="error" visible={!isValid}>
           {errorMessages}
         </HelperText>
       </View>
@@ -89,4 +120,16 @@ export const CustomTextField: React.FC<TextFieldProps> = passedProps => {
   );
 };
 
-CustomTextField.defaultProps = defaultTextFieldProps;
+export const getInputFieldComponent = (props: ExtendedTextFieldProps) => {
+  return (
+    <TextField 
+      validator={props.validator}
+      label={props.label}
+      uuid={props.uuid ? props.uuid : uuid.v4()}
+      formUuid={props.formUuid ? props.formUuid : ''}
+      type={props.type ? props.type : InputStyle.FLAT}
+      inputType={props.inputType ? props.inputType : InputType.TEXT}
+      defaultText={props.defaultText}
+      />
+  )
+}

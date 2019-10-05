@@ -6,73 +6,63 @@ import {
     SET_VALIDATION_RESULTS,
     InputFieldTypes,
     InputFieldsState,
-    REGISTER_INPUT_FIELD
+    REGISTER_INPUT_FIELD,
+    InputFieldState
 } from '../types'
 
 const initialState: InputFieldsState = {
-    inputFields: []
+    inputFields: {}
 }
 
-export default function blockWallReducer(state = initialState, action: InputFieldTypes): InputFieldsState {
+export default function inputFieldReducer(state = initialState, action: InputFieldTypes): InputFieldsState {
     const updateFieldIfExists = (uuid: string, property: string, newValue: any) => {
-        for(let i = 0; i < state.inputFields.length; i++) {
-            if(state.inputFields[i].uuid === uuid) {
-                state.inputFields[i] = {
-                    ...state.inputFields[i],
+        return {
+            inputFields: {
+                ...state.inputFields,
+                [uuid]: {
+                    ...state.inputFields[uuid],
                     [property]: newValue
                 }
-
-                return true;
             }
         }
-
-        return false;
     }
     
     switch(action.type) {
         case REGISTER_INPUT_FIELD:
-            for(let i = 0; i < state.inputFields.length; i++) {
-                if(state.inputFields[i].uuid === action.payload.uuid) {
-                    return state;
-                } 
-            }
-            
             return {
-                inputFields: [
+                inputFields: {
                     ...state.inputFields,
-                    action.payload
-                ]
+                    [action.payload.uuid]: action.payload
+                }
             }
 
         case SET_FIELD_VALUE:
-            updateFieldIfExists(action.fieldUuid, 'value', action.value)
-            return state
+            return updateFieldIfExists(action.fieldUuid, 'value', action.value)
 
         case SET_FIELD_STATE:
-            for(let i = 0; i < state.inputFields.length; i++) {
-                if(state.inputFields[i].uuid === action.fieldUuid) {
-                    state.inputFields[i] = action.payload
-                    return state;
-                } 
+            return {
+                inputFields: {
+                    ...state.inputFields,
+                    [action.fieldUuid]: action.payload
+                }
             }
-            return state
-
         case ASSIGN_FORM:
-            updateFieldIfExists(action.fieldUuid, 'formUuid', action.formUuid)
-            return state
+            return updateFieldIfExists(action.fieldUuid, 'formUuid', action.formUuid)
 
         case CLEAR_FIELD_VALUE:
-            updateFieldIfExists(action.fieldUuid, 'value', null)
-            return state;
+            return updateFieldIfExists(action.fieldUuid, 'value', null)
 
         case SET_VALIDATION_RESULTS:
-            if(action.errors.length > 0) {
-                updateFieldIfExists(action.fieldUuid, 'errors', action.errors);
-                updateFieldIfExists(action.fieldUuid, 'isValid', false);
-            } else {
-                updateFieldIfExists(action.fieldUuid, 'isValid', true);
+            return {
+                inputFields: {
+                    ...state.inputFields,
+                    [action.fieldUuid]: {
+                        ...state.inputFields[action.fieldUuid],
+                        errors: action.errors,
+                        isValid: action.errors.length < 1
+                    }
+                }
             }
-            return state
 
         default:
             return state

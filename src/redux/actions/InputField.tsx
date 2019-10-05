@@ -19,7 +19,7 @@ export function setFieldState(fieldUuid: string, state: InputFieldState): InputF
     }
 }
 
-export function setFieldValue(fieldUuid: string, value: string | number | boolean | Date | File | null): InputFieldTypes {
+export function setFieldValue(fieldUuid: string, value: string | number | boolean | Date | File): InputFieldTypes {
     return {
         type: SET_FIELD_VALUE,
         fieldUuid: fieldUuid,

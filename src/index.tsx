@@ -12,8 +12,10 @@ import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 
 import { Provider as ReduxProvider } from 'react-redux';
-import { createStore } from 'redux';
-import rootReducer from './redux/reducers'
+import { createStore, applyMiddleware, Reducer, StoreEnhancer } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension'
+import thunkMiddleware from 'redux-thunk'
+import rootReducer from './redux/reducers/'
 
 import DateFnsUtils from '@date-io/date-fns';
 
@@ -30,7 +32,19 @@ const theme = {
   }
 };
 
-const store = createStore(rootReducer)
+function configureStore(reducer: Reducer) {
+  const middlewares = [thunkMiddleware]
+  const middlewareEnhancer = applyMiddleware(...middlewares)
+
+  const enhancers = [middlewareEnhancer]
+  const composedEnhancers: StoreEnhancer = composeWithDevTools(...enhancers)
+
+  const store = createStore(reducer, undefined, composedEnhancers)
+
+  return store
+}
+
+const store = configureStore(rootReducer)
 
 const Root = () => (
   <ReduxProvider store={store}>

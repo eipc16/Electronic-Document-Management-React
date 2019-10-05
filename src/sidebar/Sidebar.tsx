@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { Dispatch } from 'react';
 
 import { mdiToggleSwitchOff, mdiToggleSwitch } from '@mdi/js';
 import { Icon } from '@mdi/react';
 
 import './Sidebar.scss';
+import { switchBlockWall } from '../redux/actions';
+import { connect } from 'react-redux';
+import { BlockWallTypes } from '../redux/types';
 
 export enum SidebarVisibility {
   HIDDEN = 'hidden',
@@ -29,12 +32,18 @@ interface SidebarProps {
   loadingScreen: () => JSX.Element;
 }
 
+interface DispatchProps {
+  toggleWall: (visibility: boolean) => void;
+}
+
 interface SidebarState {
   visibility: SidebarVisibility;
   selected: number;
 }
 
-class CustomSidebar extends React.Component<SidebarProps, SidebarState> {
+type ComponentProps = SidebarProps & DispatchProps
+
+class CustomSidebar extends React.Component<ComponentProps, SidebarState> {
   public static DEFAULT_CLASS = 'side-bar';
 
   public static MODE_SWITCH_TITLE = 'Switch sidebar mode';
@@ -50,7 +59,7 @@ class CustomSidebar extends React.Component<SidebarProps, SidebarState> {
     }
   };
 
-  constructor(props: SidebarProps) {
+  constructor(props: ComponentProps) {
     super(props);
 
     this.state = {
@@ -62,6 +71,8 @@ class CustomSidebar extends React.Component<SidebarProps, SidebarState> {
   setVisibility(visibility: SidebarVisibility) {
     this.setState({
       visibility: visibility
+    }, () => {
+      this.props.toggleWall(visibility === SidebarVisibility.EXTENDED)
     });
   }
 
@@ -78,6 +89,7 @@ class CustomSidebar extends React.Component<SidebarProps, SidebarState> {
         : SidebarVisibility.DEFAULT;
 
     this.setVisibility(newMode);
+
   }
 
   private handleClick(
@@ -91,10 +103,6 @@ class CustomSidebar extends React.Component<SidebarProps, SidebarState> {
       this.setSelected(index);
     }
     element.onClick();
-  }
-
-  private blockClick(event: React.MouseEvent) {
-    event.stopPropagation();
   }
 
   private getElementsFromProps(): JSX.Element[] {
@@ -116,7 +124,6 @@ class CustomSidebar extends React.Component<SidebarProps, SidebarState> {
         >
           <Icon className={iconClass} path={el.icon} size={3} />
           <p className={textClass}>{el.title}</p>
-          {/* <span className='action-description'>{el.description}</span> */}
         </div>
       );
     });
@@ -138,7 +145,6 @@ class CustomSidebar extends React.Component<SidebarProps, SidebarState> {
 
     return (
       <div>
-        <div className={`action-blocker ${visibility}`} onClick={(event) => this.blockClick(event)}/>
         <div className="sidebar-top-container">
           <div className={`${this.props.className} ${visibility}`} style={sidebarStyle}>
           <div className="elements_container">{this.getElementsFromProps()}</div>
@@ -156,4 +162,12 @@ class CustomSidebar extends React.Component<SidebarProps, SidebarState> {
   }
 }
 
-export default CustomSidebar;
+const mapDispatchToProps = (dispatch: Dispatch<BlockWallTypes>, ownProps: SidebarProps) => {
+  return {
+    // dispatching plain actions
+    toggleWall: (visibility: boolean) => dispatch(switchBlockWall(visibility)),
+    ...ownProps
+  }
+}
+
+export default connect<{}, DispatchProps, SidebarProps>(null, mapDispatchToProps)(CustomSidebar)

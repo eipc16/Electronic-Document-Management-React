@@ -11,13 +11,15 @@ export interface InputFieldState {
     uuid: string;
     formUuid: string;
     name: string;
-    value: string | number | boolean | Date | File | null;
+    value: string | number | boolean | Date | File;
     isValid: boolean;
     errors: ValidatorError[];
 }
 
 export interface InputFieldsState {
-    inputFields: InputFieldState[];
+    inputFields: {
+        [uuid: string]: InputFieldState;
+    };
 }
 
 interface SetFieldStateAction {
@@ -29,7 +31,7 @@ interface SetFieldStateAction {
 interface SetFieldValueAction {
     type: typeof SET_FIELD_VALUE;
     fieldUuid: string;
-    value: string | number | boolean | Date | File | null;
+    value: string | number | boolean | Date | File;
 }
 
 interface AssignToFormAction {
