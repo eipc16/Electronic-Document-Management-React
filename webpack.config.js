@@ -9,7 +9,7 @@ module.exports = {
     // Path for the output files
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: 'app.bundle.js',
+        filename: 'app.bundle.js'
     },
 
     // Enable source map support
@@ -29,32 +29,37 @@ module.exports = {
 
                         // The configration for compilation
                         presets: [
-                            ['@babel/preset-env', { useBuiltIns: 'usage' }],
+                            [
+                                '@babel/preset-env',
+                                {
+                                    useBuiltIns: 'usage'
+                                }
+                            ],
                             '@babel/preset-react',
-                            '@babel/preset-flow',
+                            '@babel/preset-flow'
                         ],
                         plugins: [
                             '@babel/plugin-proposal-class-properties',
                             '@babel/plugin-proposal-object-rest-spread'
-                        ],
-                    },
-                },
+                        ]
+                    }
+                }
             },
             {
                 test: /\.(jpg|png|woff|woff2|eot|ttf|svg)$/,
-                loader: 'file-loader',
-            },
-        ],
+                loader: 'file-loader'
+            }
+        ]
     },
     resolve: {
         alias: {
-            'react-native$': require.resolve('react-native-web'),
+            'react-native$': require.resolve('react-native-web')
         }
     },
 
     // Development server config
     devServer: {
         contentBase: [path.join(__dirname, 'public')],
-        historyApiFallback: true,
-    },
+        historyApiFallback: true
+    }
 };

@@ -18,6 +18,29 @@ $color-animation-type: ease-in-out;
     width: 150px;
     overflow: hidden;
     @include transition( width $width-animation-delay $width-animation-type, background-color $color-animation-delay $color-animation-type);
+    &.default {
+        width: 75px;
+    }
+    &.extended {
+        width: 300px;
+        position: absolute;
+        display: block;
+        left: 0;
+        top: 0;
+        background-color: green;
+    }
+    &.hidden {
+        width: 0;
+        overflow: hidden;
+        background-color: blue;
+    }
+}
+
+.sidebar-top-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99999;
 }
 
 .side-bar.default {
@@ -25,15 +48,20 @@ $color-animation-type: ease-in-out;
     background-color: red;
 }
 
-.side-bar.extended {
-    width: 300px;
-    background-color: green;
-}
-
-.side-bar.hidden {
+.action-blocker {
+    position: fixed;
+    left: 0px;
     width: 0;
-    overflow: hidden;
-    background-color: blue;
+    height: 100vh;
+    z-index: 99998;
+    background-color: lightgrey;
+    opacity: 0;
+    @include transition( opacity 0.4s 0.1s ease-in-out);
+    &.extended {
+        width: 100vw;
+        display: block;
+        opacity: 0.3
+    }
 }
 
 .elements_container {
