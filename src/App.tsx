@@ -26,7 +26,7 @@ import {
   AlertTypes
 } from './notifications/Notification';
 
-import { getInputFieldComponent } from './wizards/inputs/TextField';
+import { getInputFieldComponent, InputType } from './wizards/inputs/TextField';
 import { Validator } from './wizards/validators/Validator';
 import {
   noUpperCase,
@@ -147,13 +147,14 @@ const App: React.FC = () => {
           label: "Fabrykowy",
           defaultText: "Siema",
           validator: myValidator,
-          uuid: "siema"
+          uuid: "SIEMA"
         })}
+
         {getInputFieldComponent({
           label: "Fabrykowy",
           defaultText: "Siema",
-          validator: myValidator,
-          uuid: "siffema"
+          inputType: InputType.NUMBER,
+          uuid: "SIEMA2"
         })}
       </div>
     </div>

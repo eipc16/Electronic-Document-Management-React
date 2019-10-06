@@ -6,8 +6,7 @@ import {
     SET_VALIDATION_RESULTS,
     InputFieldTypes,
     InputFieldsState,
-    REGISTER_INPUT_FIELD,
-    InputFieldState
+    REGISTER_INPUT_FIELD
 } from '../types'
 
 const initialState: InputFieldsState = {
