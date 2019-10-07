@@ -1,4 +1,4 @@
-import { hasUpperCase, hasLowerCase, longerThan } from '../../utils/Utils';
+import { hasUpperCase, hasLowerCase, longerThan, dateAfter } from '../../utils/Utils';
 
 export interface ValidatorRule {
   test: (value: any, expected?: any) => boolean;
@@ -25,3 +25,10 @@ export const hasLengthGreaterThan6: ValidatorRule = {
   },
   message: 'Has to be shorter than 10 :)'
 };
+
+export const dateIsAfterToday: ValidatorRule = {
+  test: (value: Date) => {
+    return dateAfter(value, new Date())
+  },
+  message: 'Selected date has to be higher than today\'s date'
+}

@@ -1,11 +1,4 @@
-@mixin transition($args...) {
-    -webkit-transition: $args;
-    -moz-transition: $args;
-    -ms-transition: $args;
-    -o-transition: $args;
-    transition: $args;
-}
-
+@import '../App.scss';
 $width-animation-delay: 550ms;
 $width-animation-type: ease-in;
 $color-animation-delay: 700ms;

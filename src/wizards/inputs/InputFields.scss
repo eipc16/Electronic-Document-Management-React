@@ -1,3 +1,4 @@
+@import '../../App.scss';
 .input-container {
     display: block;
     text-align: center;
@@ -5,4 +6,37 @@
     margin-top: 20px;
     // DEV OPTIONS
     padding-left: 50px;
+}
+
+.date-picker {
+    width: 100%;
+    background-color: "transparent";
+    border: 5px;
+    border-color: #ff0000;
+}
+
+.password-checkbox {
+    position: absolute;
+    right: 5px;
+    top: 40%;
+}
+
+.checkbox-label {
+    &:before {
+        content: 'Show/Hide password';
+        font-size: 0.8rem;
+        opacity: 0;
+        position: absolute;
+        border: 1px solid black;
+        top: 50%;
+        right: 5px;
+        border-radius: 3px;
+        padding: 3px;
+        @include transition(opacity 1s, top 0.7s 0.3s);
+    }
+    &:hover:before {
+        opacity: 1;
+        top: 5px;
+        @include transition(top 1s, opacity 0.8s 0.3s);
+    }
 }

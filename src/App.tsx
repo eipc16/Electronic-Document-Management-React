@@ -26,15 +26,18 @@ import {
   AlertTypes
 } from './notifications/Notification';
 
-import { getInputFieldComponent, InputType } from './wizards/inputs/TextField';
 import { Validator } from './wizards/validators/Validator';
 import {
   noUpperCase,
-  hasLengthGreaterThan6
+  hasLengthGreaterThan6,
+  dateIsAfterToday
 } from './wizards/validators/ValidatorRules';
 import { useDispatch } from 'react-redux';
 import { registerInputField, setFieldState } from './redux/actions';
 import { ActionBlocker } from './actionblocker/ActionBlocker';
+import { getDateTimeComponent, getInputFieldComponent, InputType, InputStyle } from './wizards/inputs';
+import { dateAfter } from './utils/Utils';
+import SelectorField from './wizards/inputs/SelectorField';
 
 const App: React.FC = () => {
   const elementsList = [
@@ -138,6 +141,10 @@ const App: React.FC = () => {
     hasLengthGreaterThan6
   ]);
 
+  const dateValidator: Validator = new Validator([
+    dateIsAfterToday
+  ])
+
   return (
     <div className="App">
       <ActionBlocker />
@@ -145,17 +152,36 @@ const App: React.FC = () => {
       <div className="main-container">
         {getInputFieldComponent({
           label: "Fabrykowy",
-          defaultText: "Siema",
           validator: myValidator,
           uuid: "SIEMA"
         })}
 
         {getInputFieldComponent({
           label: "Fabrykowy",
-          defaultText: "Siema",
           inputType: InputType.NUMBER,
-          uuid: "SIEMA2"
+          uuid: "SIEMA2",
+          required: true
         })}
+
+        {getInputFieldComponent({
+          label: "Fabrykowy",
+          inputType: InputType.PASSWORD,
+          uuid: "SIEMA32",
+          required: true
+        })}
+
+        {getDateTimeComponent({
+          label: "Date",
+          uuid: "DATE_UUID",
+          validator: dateValidator,
+        })}
+        {getDateTimeComponent({
+          label: "Date",
+          uuid: "DATE_UUID2",
+          defaultValue: new Date("2019-01-12"),
+          validator: dateValidator
+        })}
+        <SelectorField />
       </div>
     </div>
   );

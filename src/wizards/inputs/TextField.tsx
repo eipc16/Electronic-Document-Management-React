@@ -7,12 +7,14 @@ import { View } from 'react-native';
 import uuid from 'uuid'
 
 import './InputFields.scss';
-import { HelperText, TextInput } from 'react-native-paper';
+import { HelperText, TextInput, Checkbox } from 'react-native-paper';
 
 import rootReducer from '../../redux/reducers'
 
 import {setFieldValue, setFieldValidationResults, registerInputField} from '../../redux/actions'
 import { InputFieldState, InputFieldsState } from '../../redux/types';
+import Icon from '@mdi/react';
+import { mdiEyeOutline, mdiEyeOffOutline } from '@mdi/js';
 
 export enum InputStyle {
   FLAT = "flat",
@@ -22,7 +24,9 @@ export enum InputStyle {
 export enum InputType {
     NUMBER = "numeric",
     TEXT = "default",
-    EMAIL = "email-address"
+    EMAIL = "email-address",
+    PASSWORD = "visible-password",
+    // DATE = "date"
 }
 
 interface TextFieldProps {
@@ -32,17 +36,21 @@ interface TextFieldProps {
   validator: Validator | undefined;
   type: InputStyle;
   inputType: InputType;
+  placeholder: string;
   defaultText?: string;
+  required: boolean;
 }
 
 export interface ExtendedTextFieldProps {
   label: string;
-  uuid?: string;
+  uuid: string;
   formUuid?: string;
   defaultText?: string;
   validator?: Validator;
   type?: InputStyle;
   inputType?: InputType;
+  placeholder?: string;
+  required?: boolean;
 }
 
 const defaultFieldStyle = {
@@ -62,18 +70,22 @@ const getInputFieldByUuidSelector = createSelector(
 const TextField: React.FC<TextFieldProps> = props => {
   const dispatch = useDispatch()
   const [exists, setExists] = useState(false)
-  
+  const [hideText, setHideText] = useState(true)
+
   if(!exists) {
+    const identifier = props.uuid
+  
     dispatch(registerInputField({
-      uuid: props.uuid,
+      uuid: identifier,
       formUuid: props.formUuid,
       name: props.label,
       value: props.defaultText ? props.defaultText : '',
       isValid: true,
       errors: []
     }))
-    
+
     setExists(true)
+
   }
 
   const fieldState: InputFieldState = useSelector(
@@ -90,6 +102,10 @@ const TextField: React.FC<TextFieldProps> = props => {
     }
   };
 
+  const secureText = () => {
+    return props.inputType === InputType.PASSWORD && hideText
+  }
+
   let errorMessages: JSX.Element[] = [];
 
   if (props.validator) {
@@ -102,7 +118,7 @@ const TextField: React.FC<TextFieldProps> = props => {
     <div className="input-container">
       <View>
         <TextInput
-          label={name}
+          label={name + (props.required ? " *" : '')}
           key={uuid}
           value={value.toString()}
           error={!isValid}
@@ -110,8 +126,23 @@ const TextField: React.FC<TextFieldProps> = props => {
           keyboardType={props.inputType}
           onChangeText={(text: string) => setContentAndErrors(text)}
           style={defaultFieldStyle}
+          secureTextEntry={secureText()}
         />
-
+        { props.inputType === InputType.PASSWORD 
+          ? (
+              <label
+                className="checkbox-label"
+                htmlFor={`checkbox_${uuid}`}>
+                  <input type="checkbox"
+                    id={`checkbox_${uuid}`}
+                    checked={hideText} 
+                    onChange={() => setHideText(!hideText)} 
+                    style={{'display': 'none'}}
+                  />
+                  <Icon className="password-checkbox" path={hideText ? mdiEyeOutline : mdiEyeOffOutline } size={1} />
+              </label>
+          ): null
+        }
         <HelperText type="error" visible={!isValid}>
           {errorMessages}
         </HelperText>
@@ -125,11 +156,13 @@ export const getInputFieldComponent = (props: ExtendedTextFieldProps) => {
     <TextField 
       validator={props.validator}
       label={props.label}
-      uuid={props.uuid ? props.uuid : uuid.v4()}
+      uuid={props.uuid}
       formUuid={props.formUuid ? props.formUuid : ''}
       type={props.type ? props.type : InputStyle.FLAT}
       inputType={props.inputType ? props.inputType : InputType.TEXT}
       defaultText={props.defaultText}
+      required={props.required ? props.required : false}
+      placeholder={props.placeholder ? props.placeholder : ''}
       />
   )
 }

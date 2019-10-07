@@ -17,3 +17,20 @@ export function longerThan(
 
   return text.length > limit;
 }
+
+/* Looking for better solution */
+export function dateAfter(testedDate: Date, baseDate: Date) {
+  if(testedDate.getFullYear() > baseDate.getFullYear()) {
+    return true;
+  } else if(testedDate.getFullYear() === baseDate.getFullYear()) {
+    if(testedDate.getMonth() > baseDate.getMonth()) {
+      return true;
+    } else if(testedDate.getMonth() === baseDate.getMonth()) {
+      if(testedDate.getDate() > baseDate.getDate()) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
