@@ -93,7 +93,7 @@ export const form_2 = {
     title: 'Title nr 2',
     endpoint: '/api/form_2',
     fields: [{
-        uuid: 'form-1-input-text-2',
+        uuid: 'form-2-input-text-2',
         formUuid: 'form-2',
         type: 'TEXT',
         defaultValue: 5,

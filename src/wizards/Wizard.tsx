@@ -7,13 +7,16 @@ import { Button } from 'react-native-paper';
 
 import './Wizards.scss'
 import { useDispatch } from 'react-redux';
+import { setCurrentForm, sendForm } from '../redux/actions';
+import { useRegisterCurrentForm } from '../utils/ReduxUtils';
+import { FormState } from '../redux/types';
 
 export enum FormType {
     POPUP = "popup",
     NORMAL = ""
 }
 
-interface InputField {
+export interface InputField {
     uuid: string;
     formUuid: string;
     type: string;
@@ -31,6 +34,7 @@ export interface FormProps {
     title: string;
     fields: InputField[];
     formType?: FormType;
+    endpoint: string;
 }
 
 function getValidatorFunctionFromString(validation: string) {
@@ -127,12 +131,18 @@ export const FormComponent: React.FC<FormProps> = form => {
     const dispatch = useDispatch()
 
     const handleSubmit = () => {
-        // dispatch(sendForm())
+        dispatch(sendForm())
     }
 
     const handleDecline = () => {
 
     }
+
+    const inputList = form.fields.map(field => {
+        return getCorrectInputComponent(field)
+    })
+
+    useRegisterCurrentForm(form)
 
     const formType = form.formType ? form.formType.valueOf() : FormType.NORMAL;
     
@@ -140,11 +150,7 @@ export const FormComponent: React.FC<FormProps> = form => {
         <div className={`form-container ${formType}`}>
             <p className='form-title'>{form.title}</p>
             <form>
-                {
-                    form.fields.map(field => {
-                        return getCorrectInputComponent(field)
-                    })
-                }
+                {inputList}
             </form>
             <div className='form-btn-container'>
                 <div className='btn cancel'>
@@ -164,5 +170,17 @@ export const FormComponent: React.FC<FormProps> = form => {
                 </div>
             </div>
         </div>
+    )
+}
+
+export const getForm = (title: string, uuid: string, fields: InputField[], endpoint: string, formType?: FormType) => {
+    return (
+        <FormComponent 
+            title={title}
+            uuid={uuid}
+            fields={fields}
+            formType={FormType.POPUP}
+            endpoint={endpoint}
+      />
     )
 }

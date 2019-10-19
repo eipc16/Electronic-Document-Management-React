@@ -13,7 +13,7 @@ import formReducer from './FormReducer'
 const combinedReducers = (state = {}, action) => {
     return {
         inputFields: inputFieldReducer(state.inputFields, action),
-        formReducer: formReducer(state.form, action, state.inputFields),
+        form: formReducer(state.form, action, state.inputFields),
         blockWall: blockWallReducer(state.blockWall, action)
     }
 }

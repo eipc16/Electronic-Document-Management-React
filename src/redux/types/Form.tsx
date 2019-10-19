@@ -1,12 +1,13 @@
 import React from 'react'
 
 export const REGISTER_FORM = 'REGISTER_FORM';
+export const SEND_FORM = 'SEND_FORM';
 
 export interface FormState {
     uuid: string;
     title: string;
     endpoint: string;
-    visible: boolean;
+    visible: boolean | undefined;
     fields: string[];
 }
 
@@ -15,4 +16,10 @@ interface RegisterFormAction {
     formData: FormState;
 }
 
-export type FormActions = RegisterFormAction
+interface SendFormAction {
+    type: typeof SEND_FORM;
+}
+
+export type FormActions = 
+    RegisterFormAction
+    | SendFormAction
