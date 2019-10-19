@@ -7,7 +7,6 @@ import {
     InputFieldTypes,
     InputFieldState,
     REGISTER_INPUT_FIELD,
-    SEND_FORM_TO_SERVER
 } from '../types'
 
 import { ValidatorError } from '../../wizards/validators/Validator'
@@ -56,11 +55,5 @@ export function registerInputField(inputField: InputFieldState): InputFieldTypes
     return {
         type: REGISTER_INPUT_FIELD,
         payload: inputField
-    }
-}
-
-export function sendForm(): InputFieldTypes {
-    return {
-        type: SEND_FORM_TO_SERVER
     }
 }

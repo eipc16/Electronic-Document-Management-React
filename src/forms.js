@@ -1,6 +1,7 @@
 export const form_1 = {
     uuid: 'form-1',
     title: 'Title nr 1',
+    endpoint: '/api/form_1',
     fields: [{
             uuid: 'form-1-input-text-1',
             formUuid: 'form-1',
@@ -90,7 +91,16 @@ export const form_1 = {
 export const form_2 = {
     uuid: 'form-2',
     title: 'Title nr 2',
-    fields: [
-
-    ]
+    endpoint: '/api/form_2',
+    fields: [{
+        uuid: 'form-1-input-text-2',
+        formUuid: 'form-2',
+        type: 'TEXT',
+        defaultValue: 5,
+        isRequired: true,
+        label: 'Input Text 1 Number Form 2',
+        name: 'form-1-input-text-2-name',
+        placeholder: '53235',
+        validators: ['hasLengthGreaterThan10']
+    }]
 }

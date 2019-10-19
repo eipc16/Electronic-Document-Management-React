@@ -9,7 +9,6 @@ export const ASSIGN_FORM = 'ASSIGN_FIELD_TO_FORM'
 export const CLEAR_FIELD_VALUE = 'CLEAR_FORM_FIELD_VALUE'
 export const SET_VALIDATION_RESULTS = 'SET_FIELD_VALIDATION_RESULTS';
 export const IS_FIELD_REGISTERED = 'IS_FIELD_REGISTERED';
-export const SEND_FORM_TO_SERVER = 'SEND_FORM_TO_SERVER';
 
 export interface InputFieldState {
     uuid: string;
@@ -24,12 +23,7 @@ export interface InputFieldState {
 }
 
 export interface InputFieldsState {
-    uuid: string;
-    title: string;
-    visible: boolean;
-    inputFields: {
-        [uuid: string]: InputFieldState;
-    };
+    [uuid: string]: InputFieldState;
 }
 
 interface SetFieldStateAction {
@@ -66,10 +60,6 @@ interface RegisterInputFieldAction {
     payload: InputFieldState;
 }
 
-interface SendFormAction {
-    type: typeof SEND_FORM_TO_SERVER;
-}
-
 export type InputFieldTypes = 
     SetFieldStateAction 
     | SetFieldValueAction
@@ -77,4 +67,3 @@ export type InputFieldTypes =
     | ClearFieldValueAction 
     | SetValidationResultsAction
     | RegisterInputFieldAction
-    | SendFormAction

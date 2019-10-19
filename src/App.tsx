@@ -35,7 +35,7 @@ const App: React.FC = () => {
   //   .setTimeout(10000)
   //   .build();
 
-  const form = form_1
+  const form = form_2
 
   return (
     <div className="App">

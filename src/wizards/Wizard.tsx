@@ -7,7 +7,6 @@ import { Button } from 'react-native-paper';
 
 import './Wizards.scss'
 import { useDispatch } from 'react-redux';
-import { sendForm } from '../redux/actions';
 
 export enum FormType {
     POPUP = "popup",
@@ -128,7 +127,7 @@ export const FormComponent: React.FC<FormProps> = form => {
     const dispatch = useDispatch()
 
     const handleSubmit = () => {
-        dispatch(sendForm())
+        // dispatch(sendForm())
     }
 
     const handleDecline = () => {

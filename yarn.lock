@@ -2307,6 +2307,13 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
+"@types/reduce-reducers@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@types/reduce-reducers/-/reduce-reducers-0.3.0.tgz#d86d88049c38bebbafa5baf121282d765fabbebf"
+  integrity sha512-S9Vi74p0UOlqf9dqiurBwNBp+ABAGZ7nJAZteFS6LS8y9u2fkGfvNk1gtauKoDG+BuB4vjp1+P/R0/r5rFxYDQ==
+  dependencies:
+    redux "^4.0.0"
+
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
@@ -10289,6 +10296,11 @@ redent@^1.0.0:
   dependencies:
     indent-string "^2.1.0"
     strip-indent "^1.0.1"
+
+reduce-reducers@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/reduce-reducers/-/reduce-reducers-1.0.4.tgz#fb77e751a9eb0201760ac5a605ca8c9c2d0537f8"
+  integrity sha512-Mb2WZ2bJF597exiqX7owBzrqJ74DHLK3yOQjCyPAaNifRncE8OD0wFIuoMhXxTnHK07+8zZ2SJEKy/qtiyR7vw==
 
 redux-devtools-extension@^2.13.8:
   version "2.13.8"

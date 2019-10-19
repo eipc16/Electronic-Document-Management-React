@@ -6,8 +6,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { registerInputField } from '../redux/actions';
 
 const getInputFieldByUuid = (fieldsState: InputFieldsState, uuid: string) => {
-    return fieldsState.inputFields[uuid]
-  }
+    return fieldsState[uuid]
+}
   
 const getInputFieldByUuidSelector = createSelector(
                                                 (state: InputFieldsState) => state, 
@@ -17,7 +17,7 @@ const getInputFieldByUuidSelector = createSelector(
 export const useFieldStateByUUid = (uuid: string) => {
     return useSelector(
         (state: ReturnType<typeof rootReducer>) => 
-                getInputFieldByUuidSelector(state.form, uuid)
+                getInputFieldByUuidSelector(state.inputFields, uuid)
         )
 }
 
