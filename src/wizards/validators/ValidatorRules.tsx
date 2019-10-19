@@ -19,7 +19,7 @@ export const noLowerCase: ValidatorRule = {
   message: 'Lower case characters are forbidden'
 };
 
-export const hasLengthGreaterThan6: ValidatorRule = {
+export const hasLengthGreaterThan10: ValidatorRule = {
   test: (value: string) => {
     return !longerThan(value, 10);
   },

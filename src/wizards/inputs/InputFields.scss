@@ -2,10 +2,16 @@
 .input-container {
     display: block;
     text-align: center;
-    width: 400px;
+    position: relative;
     margin-top: 20px;
-    // DEV OPTIONS
-    padding-left: 50px;
+    & span {
+        width: 100%;
+        float: left;
+    }
+}
+
+.input-container-inner {
+    position: relative;
 }
 
 .date-picker {
@@ -18,7 +24,7 @@
 .password-checkbox {
     position: absolute;
     right: 5px;
-    top: 40%;
+    top: 35%;
 }
 
 .checkbox-label {
@@ -38,5 +44,18 @@
         opacity: 1;
         top: 5px;
         @include transition(top 1s, opacity 0.8s 0.3s);
+    }
+}
+
+.field-label {
+    float: left;
+    padding-left: 2px;
+    padding-bottom: 2px;
+    width: 100%;
+    text-align: left;
+    font-size: 0.75em;
+    color: darkgrey;
+    &.selected {
+        color: lightblue;
     }
 }

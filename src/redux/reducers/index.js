@@ -3,6 +3,6 @@ import inputFieldReducer from './inputFieldReducer'
 import blockWallReducer from './blockWallReducer'
 
 export default combineReducers({
-    fields: inputFieldReducer,
+    form: inputFieldReducer,
     blockWall: blockWallReducer
 })

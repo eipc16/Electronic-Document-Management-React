@@ -6,10 +6,12 @@ import {
     SET_VALIDATION_RESULTS,
     InputFieldTypes,
     InputFieldState,
-    REGISTER_INPUT_FIELD
+    REGISTER_INPUT_FIELD,
+    SEND_FORM_TO_SERVER
 } from '../types'
 
 import { ValidatorError } from '../../wizards/validators/Validator'
+import { SearchOption } from '../../wizards/inputs'
 
 export function setFieldState(fieldUuid: string, state: InputFieldState): InputFieldTypes {
     return {
@@ -19,7 +21,7 @@ export function setFieldState(fieldUuid: string, state: InputFieldState): InputF
     }
 }
 
-export function setFieldValue(fieldUuid: string, value: string | number | boolean | Date | File): InputFieldTypes {
+export function setFieldValue(fieldUuid: string, value: string | number | boolean | Date | File | SearchOption | null): InputFieldTypes {
     return {
         type: SET_FIELD_VALUE,
         fieldUuid: fieldUuid,
@@ -54,5 +56,11 @@ export function registerInputField(inputField: InputFieldState): InputFieldTypes
     return {
         type: REGISTER_INPUT_FIELD,
         payload: inputField
+    }
+}
+
+export function sendForm(): InputFieldTypes {
+    return {
+        type: SEND_FORM_TO_SERVER
     }
 }

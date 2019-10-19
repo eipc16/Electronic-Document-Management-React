@@ -16,16 +16,14 @@ interface SelectorProps {
 
 const SingleSelectorComponent = (props: SelectorProps) => {
 
-    const [selected, setSelected] = useState(props.selected);
-
     switch(props.type) {
         case SelectorType.RADIO_BUTTONS:
             return (
                 <div className="check-box">
                     <p>{props.label}</p>
                     <Checkbox 
-                        status={selected ? 'checked' : 'unchecked'} 
-                        onPress={() => setSelected(!selected)} 
+                        status={props.selected ? 'checked' : 'unchecked'} 
+                        onPress={() => props.onChangeState(props.index)} 
                     />
                 </div>
             )
@@ -33,8 +31,8 @@ const SingleSelectorComponent = (props: SelectorProps) => {
             return (
                 <RadioButton 
                     value={props.label} 
-                    status={selected ? 'checked' : 'unchecked'}  
-                    onPress={() => setSelected(!selected)} 
+                    status={props.selected ? 'checked' : 'unchecked'}  
+                    onPress={() => props.onChangeState(props.index)} 
                 />
             )
     }
@@ -42,35 +40,39 @@ const SingleSelectorComponent = (props: SelectorProps) => {
 
 const SelectorField: React.FC = () => {
 
+    const [selectedRadioBtn, setSelectedRadioBtns] = useState(1);
+    const [selectedCheckbox1, setSelectedCheckBox1] = useState(false);
+    const [selectedCheckbox2, setSelectedCheckBox2] = useState(true);
+
     return (
         <div>
             <SingleSelectorComponent 
                 type={SelectorType.CHECKBOXES} 
                 index={1} 
                 label='CHECKBOX_1' 
-                selected={true} 
-                onChangeState={(id) => alert(id)} 
+                selected={selectedCheckbox1} 
+                onChangeState={() => setSelectedCheckBox1(!selectedCheckbox1)} 
             />
             <SingleSelectorComponent 
             type={SelectorType.RADIO_BUTTONS} 
             index={1} 
             label='RADIOBUTTON_1' 
-            selected={true} 
-            onChangeState={(id) => alert(id)} 
+            selected={selectedRadioBtn === 1} 
+            onChangeState={() => setSelectedRadioBtns(1)} 
             />
             <SingleSelectorComponent 
             type={SelectorType.CHECKBOXES} 
             index={2} 
             label='CHECKBOX_2' 
-            selected={false} 
-            onChangeState={(id) => alert(id)} 
+            selected={selectedCheckbox2} 
+            onChangeState={() => setSelectedCheckBox2(!selectedCheckbox2)} 
             />
             <SingleSelectorComponent 
             type={SelectorType.RADIO_BUTTONS} 
             index={1} 
             label='RADIOBUTTON_2' 
-            selected={false} 
-            onChangeState={(id) => alert(id)} 
+            selected={selectedRadioBtn === 2} 
+            onChangeState={() => setSelectedRadioBtns(2)} 
             />
         </div>
     

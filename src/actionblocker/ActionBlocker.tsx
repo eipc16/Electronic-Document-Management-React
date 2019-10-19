@@ -4,12 +4,11 @@ import rootReducer from '../redux/reducers/'
 import { useSelector } from 'react-redux'
 
 import './ActionBlocker.scss'
+import { useBlockWallVisiblity } from '../utils/ReduxUtils'
 
 export const ActionBlocker: React.FC = () => {
 
-    const visibility = useSelector((state: ReturnType<typeof rootReducer>) => state.blockWall.visible)
-
-    console.log(visibility)
+    const visibility = useBlockWallVisiblity()
 
     const blockClick = (event: React.MouseEvent) => {
         event.stopPropagation();
