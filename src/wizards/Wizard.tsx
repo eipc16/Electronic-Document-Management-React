@@ -149,7 +149,7 @@ export const FormComponent: React.FC<FormProps> = form => {
     return (
         <div className={`form-container ${formType}`}>
             <p className='form-title'>{form.title}</p>
-            <form>
+            <form className={'form-body'}>
                 {inputList}
             </form>
             <div className='form-btn-container'>

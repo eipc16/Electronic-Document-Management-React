@@ -7,6 +7,7 @@ import './Sidebar.scss';
 import { switchBlockWall } from '../redux/actions';
 import { connect } from 'react-redux';
 import { BlockWallTypes } from '../redux/types';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 export enum SidebarVisibility {
   HIDDEN = 'hidden',
@@ -18,7 +19,7 @@ export interface SidebarElement {
   title: string;
   icon: string;
   description: string;
-  onClick: () => void;
+  onClick: (props: any) => void;
   noHighlight?: boolean;
 }
 
@@ -39,9 +40,10 @@ interface DispatchProps {
 interface SidebarState {
   visibility: SidebarVisibility;
   selected: number;
+  redirect: any;
 }
 
-type ComponentProps = SidebarProps & DispatchProps
+type ComponentProps = SidebarProps & DispatchProps & RouteComponentProps<{}>
 
 class CustomSidebar extends React.Component<ComponentProps, SidebarState> {
   public static DEFAULT_CLASS = 'side-bar';
@@ -59,12 +61,13 @@ class CustomSidebar extends React.Component<ComponentProps, SidebarState> {
     }
   };
 
-  constructor(props: ComponentProps) {
+  constructor(props: ComponentProps & RouteComponentProps<{}>) {
     super(props);
 
     this.state = {
       visibility: this.props.defaultVisibility,
-      selected: 0
+      selected: 0,
+      redirect: null
     };
   }
 
@@ -102,7 +105,7 @@ class CustomSidebar extends React.Component<ComponentProps, SidebarState> {
     if (!element.noHighlight) {
       this.setSelected(index);
     }
-    element.onClick();
+    element.onClick(this.props);
   }
 
   private getElementsFromProps(): JSX.Element[] {
@@ -170,4 +173,6 @@ const mapDispatchToProps = (dispatch: Dispatch<BlockWallTypes>, ownProps: Sideba
   }
 }
 
-export default connect<{}, DispatchProps, SidebarProps>(null, mapDispatchToProps)(CustomSidebar)
+export default connect<{}, DispatchProps, SidebarProps>(
+    null, mapDispatchToProps
+  )(withRouter(CustomSidebar))

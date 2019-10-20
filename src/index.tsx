@@ -17,10 +17,15 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import thunkMiddleware from 'redux-thunk'
 import rootReducer from './redux/reducers/'
 
+import { BrowserRouter as Router, Route} from 'react-router-dom'
+
 import DateFnsUtils from '@date-io/date-fns';
 
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/slide.css';
+import { FlowChartPage } from './flowcharts/FlowChartsPage';
+
+import history from './utils/history'
 
 const theme = {
   ...DefaultTheme,
@@ -46,16 +51,20 @@ function configureStore(reducer: Reducer) {
 
 const store = configureStore(rootReducer)
 
-const Root = () => (
-  <ReduxProvider store={store}>
-    <PaperProvider theme={theme}>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <App />
-        <Alert stack={{ limit: 3 }} {...defaultOptions} />
-      </MuiPickersUtilsProvider>
-    </PaperProvider>
-  </ReduxProvider>
-);
+const Root = () => {
+  return (
+    <Router>
+      <ReduxProvider store={store}>
+      <PaperProvider theme={theme}>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <App/>
+        </MuiPickersUtilsProvider>
+      </PaperProvider>
+      <Alert stack={{ limit: 3 }} {...defaultOptions} />
+      </ReduxProvider>
+    </Router>
+  )
+}
 
 ReactDOM.render(<Root />, document.getElementById('root'));
 

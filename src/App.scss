@@ -21,8 +21,8 @@
 .main-container {
     grid-area: main;
     display: block;
-    margin-left: 75px;
-    width: 100%;
+    width: calc(100vw - 75px);
+    height: 100vh;
 }
 
 input:focus,

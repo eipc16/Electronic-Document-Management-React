@@ -20,12 +20,11 @@ $color-animation-type: ease-in-out;
         display: block;
         left: 0;
         top: 0;
-        background-color: green;
+        @include transition( width $width-animation-delay $width-animation-type, background-color $color-animation-delay $color-animation-type);
     }
     &.hidden {
         width: 0;
         overflow: hidden;
-        background-color: blue;
     }
 }
 
@@ -100,6 +99,7 @@ $color-animation-type: ease-in-out;
     text-transform: uppercase;
     overflow-x: hidden;
     font-family: 'Roboto', sans-serif;
+    @include transition(opacity 450ms $width-animation-delay ease-ou, width $width-animation-delay 0s ease-in);
     &.default {
         width: 0%;
         opacity: 0;

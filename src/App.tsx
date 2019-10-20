@@ -1,48 +1,25 @@
 import React from 'react';
 import './App.scss';
-import Alert from 'react-s-alert';
+
+import { Route } from 'react-router-dom';
+
 import CustomSidebar from './sidebar/Sidebar';
-
-import {
-  mdiLoading
-} from '@mdi/js';
-
 import { ActionBlocker } from './actionblocker/ActionBlocker'
+import { sidebarElements } from './static/sidebar';
+import { DocumentsListPage } from './documents/DocumentsListPage';
+import { FlowChartPage } from './flowcharts/FlowChartsPage';
 
-import { FormComponent, FormProps, FormType, getForm } from './wizards/Wizard'
-import { form_1, form_2 } from './forms'
+const App: React.FC = (props: any) => {
 
-const App: React.FC = () => {
-  const elementsList = [
-    {
-      title: 'Long title 1',
-      icon: mdiLoading,
-      description: '1',
-      onClick: () =>
-        Alert.error(
-          'Co tam słychać o jak fajnie tutaj se testujemy alerty co dzialaja tak fajnie'
-        )
-    }
-  ];
-
-  // const builder = new NotificationBuilder();
-
-  // const notification = builder
-  //   .allowHTML(true)
-  //   .setEffect(AlertEffects.SLIDE)
-  //   .setPosition(AlertPositions.TOP)
-  //   .setType(AlertTypes.WARNING)
-  //   .setTimeout(10000)
-  //   .build();
-
-  const form = form_1
+  console.log(props)
 
   return (
     <div className="App">
       <ActionBlocker />
-      <CustomSidebar className="side-bar" elements={elementsList} />
+      <CustomSidebar className="side-bar" elements={sidebarElements} {...props} />
       <div className="main-container">
-        { getForm(form.title, form.uuid, form.fields, form.endpoint, FormType.NORMAL) }
+        <Route exact path="/" component={DocumentsListPage} />
+        <Route exact path="/flowcharts" component={FlowChartPage} />
       </div>
     </div>
   );
