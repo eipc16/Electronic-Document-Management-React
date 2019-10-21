@@ -22,6 +22,23 @@ export const useFieldStateByUUid = (uuid: string) => {
         )
 }
 
+export const useGetStore = () => {
+    return useSelector((store: ReturnType<typeof rootReducer>) => store)
+}
+
+export const useGetStoreState = (state: string) => {
+    return useSelector(
+        (store: ReturnType<typeof rootReducer>) => {
+            switch(state) {
+                case 'blockWall': return store.blockWall;
+                case 'flowChart': return store.flowChart;
+                case 'form': return store.form;
+                case 'inputFields': return store.inputFields;
+            }
+        }
+    )
+}
+
 const useRegisterInputField = (props: InputFieldState) => {
     const dispatch = useDispatch()
     dispatch(registerInputField(props))

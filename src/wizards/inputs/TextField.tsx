@@ -5,7 +5,6 @@ import { Validator } from '../validators/Validator';
 import './InputFields.scss';
 import { HelperText, TextInput } from 'react-native-paper';
 
-
 import { useFieldStateByUUid, useRegisterField } from '../../utils/ReduxUtils'
 
 import {setFieldValue, setFieldValidationResults} from '../../redux/actions'

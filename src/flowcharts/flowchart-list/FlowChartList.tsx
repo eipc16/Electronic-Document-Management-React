@@ -1,8 +1,8 @@
 import React from 'react';
 
-import './FlowCharts.scss'
-import { useFieldStateByUUid } from '../utils/ReduxUtils';
-import { getInputFieldComponent, InputStyle } from '../wizards/inputs';
+import '../FlowCharts.scss'
+import { useFieldStateByUUid } from '../../utils/ReduxUtils';
+import { getInputFieldComponent, InputStyle } from '../../wizards/inputs';
 import { mdiPlusCircle } from '@mdi/js';
 import Icon from '@mdi/react';
 import { Button } from 'react-native-paper';

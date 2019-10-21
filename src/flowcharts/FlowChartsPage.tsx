@@ -2,14 +2,14 @@ import React from 'react'
 
 
 import './FlowCharts.scss'
-import { FlowChartList } from './FlowChartList'
-import { FlowChartWorkshop } from './FlowChartWorkshop'
-import { FlowChartMenu } from './FlowChartMenu'
+import { FlowChartList } from './flowchart-list/FlowChartList'
+import { FlowChartWorkshop } from './flowchart-logic/FlowChartWorkshop'
+import { FlowChartActionList } from './nodes/FlowChartFlowActionList'
 
 export const FlowChartPage: React.FC = (props: any) => {
     return (
         <div className='flow-chart-page'>
-            <FlowChartMenu />
+            <FlowChartActionList />
             <FlowChartList />
             <FlowChartWorkshop />
         </div>

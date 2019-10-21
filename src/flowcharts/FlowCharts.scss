@@ -7,12 +7,13 @@ $background-color: white;
     height: 96vh;
     margin: $standard-margin;
     display: grid;
-    grid-template: "menu menu" 70px "list workshop" / 100fr 500fr;
+    grid-template: "list workshop action-list" / 100fr auto 100fr;
     grid-row-gap: $row-margin;
     row-gap: $row-margin;
     grid-column-gap: $column-margin;
     column-gap: $column-margin;
-    &>div {
+    &>.flow-chart-action-list,
+    .flow-chart-list {
         background-color: $background-color;
         box-shadow: 0 5px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
         transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
@@ -29,16 +30,39 @@ $background-color: white;
     border-right: 1px lightgrey solid;
 }
 
-.flow-chart-workshop {
-    grid-area: workshop;
-    display: flex;
-    flex-direction: row;
-    flex: 1;
-    overflow: hidden;
+.flow-chart-action-list {
+    grid-area: action-list;
+    position: relative;
+    border-left: 1px lightgrey solid;
+    border-right: 1px lightgrey solid;
 }
 
-.flow-chart-menu {
-    grid-area: menu;
+.flow-chart-workshop {
+    grid-area: workshop;
+    display: grid;
+    grid-template: "title" 50px "main-area" auto;
+    flex-direction: column;
+    row-gap: 5px;
+    grid-row-gap: 5px;
+    overflow: hidden;
+    &>.flow-chart-main-area {
+        grid-area: main-area;
+        overflow: hidden;
+    }
+    &>.flow-chart-title {
+        grid-area: title;
+        box-shadow: 0 5px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        &>p {
+            text-transform: uppercase;
+            font-size: 1.5rem;
+            height: 100%;
+            top: 50%;
+            transform: translateY(25%);
+            margin-top: auto;
+            margin-bottom: auto;
+            vertical-align: center;
+        }
+    }
 }
 
 .list-position {
@@ -55,13 +79,29 @@ $background-color: white;
     }
 }
 
+.flow-chart-list-search {
+    margin-left: 5px;
+    margin-right: 5px;
+    &.department-selector {
+        z-index: 999;
+        margin-bottom: 15px;
+    }
+}
+
 .flow-chart-list-elements {
     padding: 1px;
     overflow-y: scroll;
     max-height: 75vh;
 }
 
-.add-new-flowchart {
+.flow-chart-action-list-elements {
+    padding: 1px;
+    overflow-y: scroll;
+    max-height: 75vh;
+}
+
+.add-new-flowchart,
+.add-new-action {
     position: absolute;
     background-color: white;
     width: 100%;
@@ -73,4 +113,71 @@ $background-color: white;
         left: 50%;
         transform: translateX(-50%);
     }
+}
+
+.flow-chart-menu {
+    grid-area: menu;
+    display: flex;
+    justify-content: space-between;
+    vertical-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    top: 50%;
+    &>div {
+        text-align: center;
+        vertical-align: center;
+        height: 70%;
+    }
+}
+
+.menu-title {
+    top: 50%;
+    transform: translateY(25%);
+}
+
+.menu-department-selector {
+    width: 30%;
+    top: 50%;
+    transform: translateY(40%);
+    z-index: 999;
+}
+
+.menu-node-name-input {
+    width: 30%;
+    position: relative;
+    & .input-container-inner>div {
+        position: relative;
+        scale: scaleY(50%);
+    }
+}
+
+.menu-checkbox-selector {
+    top: 50%;
+    transform: translateY(55%);
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    &>.selector-checkbox {
+        text-align: center;
+    }
+}
+
+.menu-add-btn-container {
+    width: 10%;
+    top: 50%;
+    transform: translateY(43%);
+}
+
+.flowchart-container {
+    position: relative;
+    background-color: red;
+    border: 5px solid;
+    height: 50vw;
+}
+
+.save-flowchart-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 999;
 }
