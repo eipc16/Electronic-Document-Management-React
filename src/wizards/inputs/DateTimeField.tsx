@@ -107,6 +107,7 @@ export default DateTimeField
 export const getDateTimeComponent = (props: SelectorProps) => {
     return (
         <DateTimeField
+            key={props.uuid}
             label={props.label}
             uuid={props.uuid}
             name={props.name}

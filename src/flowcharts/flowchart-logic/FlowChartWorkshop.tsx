@@ -23,8 +23,10 @@ const CanvasOuterCustom = styled.div<ICanvasOuterDefaultProps>`
   overflow: hidden;
 ` as any
 
-export const FlowChartWorkshop: React.FC = (props: any) => {
+export const FlowChartWorkshop: React.FC<{flowChartId: string}> = (props: {flowChartId: string}) => {
     const chart: FlowChartDTO | null = useGetStoreState('flowChart') as FlowChartDTO
+
+    console.log(props)
 
     if(chart === null) {
       return null

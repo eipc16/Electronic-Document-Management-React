@@ -19,7 +19,7 @@ const App: React.FC = (props: any) => {
       <CustomSidebar className="side-bar" elements={sidebarElements} {...props} />
       <div className="main-container">
         <Route exact path="/" component={DocumentsListPage} />
-        <Route exact path="/flowcharts" component={FlowChartPage} />
+        <Route path="/flowcharts/:flowchartId?" component={FlowChartPage} />
       </div>
     </div>
   );

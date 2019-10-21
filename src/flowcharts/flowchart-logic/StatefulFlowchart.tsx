@@ -69,11 +69,16 @@ class StatefulFlowchart extends React.Component<ComponentProps, FlowChartState> 
           config={config}
           />
         </div>
-        <div className='save-flowchart-button'>
-          <Button onPress={(e) => useSaveState(e)}>
-            XOXOXO
-          </Button>
-        </div>
+        <div className='flowchart-button save-flowchart'>
+            <Button mode="contained" onPress={(e) => useSaveState(e)}>
+              SAVE FLOWCHART
+            </Button>
+          </div>
+          <div className='flowchart-button reset-flowchart'>
+            <Button mode="contained" onPress={(e) => console.log('hej')}>
+              RESET
+            </Button>
+          </div>
       </div>
     )
   }

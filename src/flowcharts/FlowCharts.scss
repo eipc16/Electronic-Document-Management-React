@@ -44,7 +44,6 @@ $background-color: white;
     flex-direction: column;
     row-gap: 5px;
     grid-row-gap: 5px;
-    overflow: hidden;
     &>.flow-chart-main-area {
         grid-area: main-area;
         overflow: hidden;
@@ -170,14 +169,18 @@ $background-color: white;
 
 .flowchart-container {
     position: relative;
-    background-color: red;
-    border: 5px solid;
-    height: 50vw;
+    overflow: hidden;
+    height: 89vh;
 }
 
-.save-flowchart-button {
+.flowchart-button {
     position: absolute;
     top: 15px;
     right: 15px;
     z-index: 999;
+    &.save-flowchart {}
+    &.reset-flowchart {
+        left: 15px;
+        right: auto;
+    }
 }

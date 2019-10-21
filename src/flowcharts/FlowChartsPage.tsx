@@ -11,7 +11,7 @@ export const FlowChartPage: React.FC = (props: any) => {
         <div className='flow-chart-page'>
             <FlowChartActionList />
             <FlowChartList />
-            <FlowChartWorkshop />
+            <FlowChartWorkshop flowChartId={props.match.params.flowchartId} />
         </div>
     )
 }

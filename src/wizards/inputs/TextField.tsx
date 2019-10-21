@@ -52,8 +52,7 @@ export interface ExtendedTextFieldProps {
 }
 
 const defaultFieldStyle = {
-  "backgroundColor": "transparent",
-  "border-size": "5px"
+  "backgroundColor": "transparent"
 }
 
 const TextField: React.FC<TextFieldProps> = props => {
@@ -109,7 +108,7 @@ const TextField: React.FC<TextFieldProps> = props => {
           value={(value != null) ? value.toString() : ''}
           error={!isValid}
           mode={props.type}
-          keyboardType={props.inputType}
+          keyboardType={props.inputType === InputType.PASSWORD ? 'default' : props.inputType}
           onChangeText={(text: string) => setContentAndErrors(text)}
           style={defaultFieldStyle}
           secureTextEntry={secureText()}
@@ -140,6 +139,7 @@ const TextField: React.FC<TextFieldProps> = props => {
 export const getInputFieldComponent = (props: ExtendedTextFieldProps) => {
   return (
     <TextField 
+      key={props.uuid}
       validator={props.validator}
       label={props.label}
       uuid={props.uuid}
