@@ -1,72 +1,12 @@
-export interface FlowChartPort {
-    id: string;
-    type: string;
-    properties?: {
-        value: string;
-        result?: string;
-    };
-}
-
-export interface FlowChartLink {
-    id: string;
-    from: {
-        nodeId: string;
-        portId: string;
-    };
-    to: {
-        nodeId: string;
-        portId: string;
-    };
-}
-
-export interface FlowChartNode {
-    id: string;
-    type: string;
-    department: string;
-    message: string;
-    position: {
-        x: number;
-        y: number;
-    };
-    ports: FlowChartPort[];
-    nextCorrect: string | null;
-    nextIncorrect: string | null;
-}
-
-export interface FlowChartDTO {
-    name: string;
-    nodes: FlowChartNode[];
-}
-
-export interface FlowChartNodeState {
-    id: string;
-    type: string;
-    department: string;
-    message: string;
-    position: {
-        x: number;
-        y: number;
-    };
-    ports: {
-        [port: string]: FlowChartPort;
-    };
-}
-
-export interface FlowChartState {
-    name: string;
-    offset: {
-        x: number;
-        y: number;
-    };
-    selected: any;
-    hovered: any;
-    nodes: {
-        [id: string]: FlowChartNodeState;
-    };
-    links: {
-        [id: string]: FlowChartLink;
-    };
-}
+import {defaultFlowChart} from "../../static/flowchart";
+import {
+    FlowChartDTO,
+    FlowChartLink,
+    FlowChartNode,
+    FlowChartNodeState,
+    FlowChartPort,
+    FlowChartState
+} from "./FlowChartInterfaces";
 
 function linkFromString(linkString: string | null): FlowChartLink | null {
     if(linkString === null) {
@@ -75,7 +15,7 @@ function linkFromString(linkString: string | null): FlowChartLink | null {
     
     const stringArray = linkString.split('_');
 
-    if(stringArray.length != 5) {
+    if(stringArray.length < 5) {
         return null
     }
 
@@ -93,10 +33,10 @@ function linkFromString(linkString: string | null): FlowChartLink | null {
 }
 
 function linkToString(link: FlowChartLink): string {
-    return `${link.id}_${link.from.nodeId}_${link.from.portId}_${link.to.nodeId}_${link.to.portId}`
+    return `${link.id}_${link.from.nodeId}_${link.from.portId}_${link.to.nodeId}_${link.to.portId}`;
 }
 
-export const mapFlowChartFromDTO = (flowchartDTO: FlowChartDTO) => {
+export const mapFlowChartFromDTO = (flowchartDTO: FlowChartDTO | null): FlowChartState => {
     
     const mapPortList = (ports: FlowChartPort[]) => {
         let portsObject = {}
@@ -147,6 +87,10 @@ export const mapFlowChartFromDTO = (flowchartDTO: FlowChartDTO) => {
                         x: node.position.x,
                         y: node.position.y
                     },
+                    size: {
+                      width: node.size.width,
+                      height: node.size.height
+                    },
                     ports: mapPortList(node.ports)
                 }
             }
@@ -167,6 +111,10 @@ export const mapFlowChartFromDTO = (flowchartDTO: FlowChartDTO) => {
         return links
     }
 
+    if(flowchartDTO === null) {
+        return mapFlowChartFromDTO(defaultFlowChart as FlowChartDTO);
+    }
+
     return {
         name: flowchartDTO.name,
         nodes: getNodesFromDTO(flowchartDTO.nodes),
@@ -174,8 +122,8 @@ export const mapFlowChartFromDTO = (flowchartDTO: FlowChartDTO) => {
         offset: {x: 0, y: 0},
         selected: {},
         hovered: {},
-    }
-}
+    };
+};
 
 export const mapFlowChartToDTO = (flowchartState: FlowChartState) => {
 
@@ -183,7 +131,7 @@ export const mapFlowChartToDTO = (flowchartState: FlowChartState) => {
         return Object.keys(ports).map(key => {
             return ports[key]
         })
-    }
+    };
 
     const getNodeString = (
             node: FlowChartNodeState, 
@@ -195,7 +143,6 @@ export const mapFlowChartToDTO = (flowchartState: FlowChartState) => {
         Object.keys(links).forEach(key => {
             const link = links[key]
             const port = node.ports[link.from.portId]
-
             if(link.from.nodeId === node.id 
                     && port.type === 'output'
                     && port.properties 
@@ -220,6 +167,10 @@ export const mapFlowChartToDTO = (flowchartState: FlowChartState) => {
                 position: {
                     x: currentNode.position.x,
                     y: currentNode.position.y
+                },
+                size: {
+                    width: currentNode.size.width,
+                    height: currentNode.size.height
                 },
                 ports: mapPortsToDTO(currentNode.ports),
                 nextCorrect: getNodeString(currentNode, links, 'correct'),

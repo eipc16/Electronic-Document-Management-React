@@ -1,0 +1,12 @@
+.port {
+  width: 24px;
+  height: 24px;
+
+  &.correct {
+    background: green;
+  }
+
+  &.incorrect {
+    background: red;
+  }
+}

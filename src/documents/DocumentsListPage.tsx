@@ -6,7 +6,7 @@ export const DocumentsListPage: React.FC = (props: any) => {
 
     const form = form_1
 
-    return getForm(form.title, form.uuid, form.fields, form.endpoint, FormType.NORMAL)
+    return getForm(form.title, form.uuid, form.fields, form.endpoint, FormType.POPUP)
 }
 
 /*
