@@ -12,10 +12,14 @@ import {ReduxStore} from "../../utils/ReduxUtils";
 import {FlowChartDTO, FlowChartState} from "../mapper/FlowChartInterfaces";
 import mapValues from "@mrblenny/react-flow-chart/src/container/utils/mapValues";
 import {CustomLink} from "../links/CustomLink";
+import {CustomPort} from "../ports/CustomPort";
+import {CanvasOuterCustom} from "./FlowChartCanvas";
+import CustomNode from "../nodes/CustomNode";
+import FlowChartCanvasData from "./FlowChartCanvasData";
+import {IOnLinkCompleteInput} from "@mrblenny/react-flow-chart/src";
 
 export interface FlowChartStateProps {
   initialValue: FlowChartState;
-  Components?: IFlowChartComponents;
   config?: IConfig;
 }
 
@@ -73,8 +77,9 @@ class StatefulFlowchart extends React.Component<ComponentProps, FlowChartState> 
     doubleClickHandler = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       event.preventDefault();
       // get form from sever, push results to state
+        const x = Math.random();
       this.addNode({
-        id: "node3",
+        id: `${x}`,
             type: "input-output",
             message: "HELLO_3",
             department: "elo2",
@@ -86,15 +91,12 @@ class StatefulFlowchart extends React.Component<ComponentProps, FlowChartState> 
             x: 200, y: 200
         },
         ports: {
-          port1: {
-                id: "port1",
-              type: "input",
-              properties: {
-                    result: 'incorrect'
-              }
+          [`${x}-port1`]: {
+                id: `${x}-port1`,
+              type: "input"
           },
-          port2: {
-            id: "port2",
+          [`${x}-port2`]: {
+            id: `${x}-port2`,
                 type: "output",
                 properties: {
                   result: 'correct'
@@ -123,14 +125,58 @@ class StatefulFlowchart extends React.Component<ComponentProps, FlowChartState> 
                 }
             }
         })
+    };
+
+    setCanvasPosition = (x: number, y: number) => {
+        this.setState({
+            ...this.state,
+            offset: {
+                ...this.state.offset,
+                x: x,
+                y: y
+            }
+        })
+    };
+
+    getDefaultConfig = () => {
+        return {
+            validateLink: ({fromNodeId, fromPortId, toNodeId, toPortId, chart}: IOnLinkCompleteInput & {chart: IChart}): boolean => {
+                let sourceLinks = 0;
+                let targetLinks = 0;
+                for (let [,value] of Object.entries(chart.links)) {
+                    if(value.from.nodeId === fromNodeId && value.from.portId === fromPortId) {
+                        sourceLinks++;
+                    }
+
+                    if(value.to.nodeId === toNodeId && value.to.portId === toPortId) {
+                        targetLinks++;
+                    }
+
+                    if(targetLinks > 0 || sourceLinks > 1) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        }
     }
 
     public render () {
-      const { Components, config } = this.props;
+      let config: IConfig;
       const chart = this.state;
+
       if(!chart){
         return null;
       }
+
+      if(!this.props.config) {
+          config = this.getDefaultConfig();
+      } else {
+          config = this.props.config;
+      }
+
+      const scale = 1;
 
       return (
         <div className='flowchart-container'>
@@ -139,38 +185,24 @@ class StatefulFlowchart extends React.Component<ComponentProps, FlowChartState> 
             chart={chart}
             callbacks={this.stateActions}
             Components={{
-                ...Components,
+                CanvasOuter: CanvasOuterCustom,
+                Node: CustomNode,
+                Port: (props) => {
+                    return <CustomPort {...props} stateActions={this.stateActions} flowChartState={chart} changePort={this.setPortResult}/>
+                },
                 Link: (props) => {
-                    return <CustomLink {...props} stateActions={this.stateActions} flowChartState={chart} changePort={this.setPortResult}/>
+                    return <CustomLink {...props} stateActions={this.stateActions} flowChartState={chart} scale={scale} changePort={this.setPortResult}/>
                 }
             }}
-            config={{
-                validateLink: ({ fromNodeId, fromPortId, toNodeId, toPortId, chart }): boolean => {
-                    let sourceLinks = 0;
-                    let targetLinks = 0;
-                    for (let [,value] of Object.entries(chart.links)) {
-                        if(value.from.nodeId === fromNodeId && value.from.portId === fromPortId) {
-                            sourceLinks++;
-                        }
-
-                        if(value.to.nodeId === toNodeId && value.to.portId === toPortId) {
-                            targetLinks++;
-                        }
-
-                        if(targetLinks > 0 || sourceLinks > 1) {
-                            return false;
-                        }
-                    }
-
-                    return true;
-                }
-            }}
+            config={config}
             />
           </div>
           <FlowChartActionButtons
             onSaveFlowChart={this.useSaveState}
             onResetFlowChart={this.useClearState}
+            onCenterCanvas={this.setCanvasPosition}
           />
+          {/*<FlowChartCanvasData />*/}
         </div>
       )
     }

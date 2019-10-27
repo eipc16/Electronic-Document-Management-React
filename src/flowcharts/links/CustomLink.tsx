@@ -41,6 +41,7 @@ const nodeHasLink = (flowChartState: FlowChartState, nodeId: string, portId: str
 interface LinkCustomProps {
     stateActions: any;
     flowChartState: FlowChartState;
+    scale: number;
     changePort: (nodeId: string, portId: string, newResult: string) => void;
 }
 
@@ -59,14 +60,25 @@ export const CustomLink = (props: ILinkDefaultProps & LinkCustomProps) => {
         return null;
     }
 
-    if(portTo && portFrom && portTo.properties.result !== portFrom.properties.result) {
-        props.changePort(linkData.to.nodeId, linkData.to.portId, portFrom.properties.result);
+    if(portFrom && portFrom.type !== 'output' || (portTo && portTo.type !== 'input')) {
+        return null;
     }
+
+    // if(portTo && portFrom && portTo.properties.result !== portFrom.properties.result) {
+    //     props.changePort(linkData.to.nodeId, linkData.to.portId, portFrom.properties.result);
+    // }
 
     const color = getColorFromPort(portFrom);
     let points;
+
     if(portFrom) {
-        points = customCurvePath(startPos, endPos, portFrom.properties.result);
+        points = customCurvePath({
+            x: startPos.x * props.scale,
+            y: startPos.y * props.scale
+        }, {
+            x: endPos.x * props.scale,
+            y: endPos.y * props.scale
+        }, portFrom.properties.result);
     }
 
     const onClickEvent = (e: React.MouseEvent<SVGPathElement, MouseEvent>) => {
@@ -117,4 +129,4 @@ export const CustomLink = (props: ILinkDefaultProps & LinkCustomProps) => {
             />
         </svg>
     )
-}
+};

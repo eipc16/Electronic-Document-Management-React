@@ -1,18 +1,12 @@
-import React, {Dispatch} from 'react';
+import React from 'react';
 
-import StatefulFlowChart, {FlowChartStateProps} from './StatefulFlowchart'
+import StatefulFlowChart from './StatefulFlowchart'
 import {mapFlowChartFromDTO} from '../mapper/FlowChartMapper';
-import CustomNode from '../nodes/CustomNode';
-import {ReduxStore, useGetStoreState} from '../../utils/ReduxUtils';
+import {ReduxStore} from '../../utils/ReduxUtils';
 
 import '../FlowCharts.scss'
-import {CanvasOuterCustom} from "./FlowChartCanvas";
-import {CustomPort} from "../ports/CustomPort";
 import {FlowChartDTO} from "../mapper/FlowChartInterfaces";
-import {CustomLink} from "../links/CustomLink";
 import {connect} from "react-redux";
-
-export const REACT_FLOW_CHART = 'react-flow-chart'
 
 interface FlowChartWorkshopProps {
     flowChartId: string;
@@ -39,11 +33,6 @@ class FlowChartWorkshop extends React.Component<WorkShopProps, {}> {
                 <div className='flow-chart-title'><p>{this.props.chart.name}</p></div>
                 <StatefulFlowChart
                     initialValue={mapFlowChartFromDTO(this.props.chart)}
-                    Components={{
-                        CanvasOuter: CanvasOuterCustom,
-                        Node: CustomNode,
-                        Port: CustomPort
-                    }}
                 />
             </div>
         )

@@ -9,7 +9,7 @@ import {
     IPortWrapperProps
 } from "@mrblenny/react-flow-chart/src";
 import {PortDefaultOuter} from "./Port";
-import {FlowChartPort} from "../mapper/FlowChartInterfaces";
+import {FlowChartPort, FlowChartState} from "../mapper/FlowChartInterfaces";
 import { useSetPortType} from "../../utils/ReduxUtils";
 
 const getPortColor = (portType: string) => {
@@ -23,17 +23,47 @@ const getPortColor = (portType: string) => {
     }
 }
 
-export const CustomPort = (props: IPortDefaultProps) => {
+interface PortCustomProps {
+    stateActions: any;
+    flowChartState: FlowChartState;
+    changePort: (nodeId: string, portId: string, newResult: string) => void;
+}
 
-    const isOfType = (port: FlowChartPort, type: string, result?: string) => {
-        if(result) {
-            return port.type === type && (port.properties.result === result);
+const isOfType = (port: FlowChartPort, type: string, result?: string) => {
+    if(result) {
+        return port.type === type && (port.properties.result === result);
+    }
+    return port.type === type;
+};
+
+const getSourcePortType = (port: FlowChartPort, state: FlowChartState) => {
+    for(let [,value] of Object.entries(state.links)) {
+        if(value.to.portId === port.id) {
+            const sourcePortNodeId = value.from.nodeId;
+            const sourcePortId = value.from.portId;
+            const sourcePort = state.nodes[sourcePortNodeId].ports[sourcePortId];
+
+            if(sourcePort) {
+                return sourcePort.properties.result;
+            }
         }
-        return port.type === type;
-    };
+    }
+
+    return 'default';
+}
+
+export const CustomPort = (props: IPortDefaultProps & PortCustomProps) => {
 
     const portData = props.port as FlowChartPort;
-    const color = getPortColor(props.port.properties.result);
+    let type = 'default';
+
+    if(portData.type === 'input') {
+        type = getSourcePortType(portData, props.flowChartState);
+    } else {
+        type = portData.properties.result;
+    }
+
+    const color = getPortColor(type);
 
     return (
         <PortDefaultOuter>
