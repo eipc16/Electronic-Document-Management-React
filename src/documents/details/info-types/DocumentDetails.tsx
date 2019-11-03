@@ -9,6 +9,8 @@ import {DocumentTableData} from "../../../redux/types/Documents";
 import {ReduxStore} from "../../../utils/ReduxUtils";
 import {connect} from "react-redux";
 
+import sample_document from '../../../static/sample_document.png';
+
 interface StateProps {
     details?: DocumentTableData;
 }
@@ -40,7 +42,7 @@ const DocumentDetails = (props: DocumentDetailsProps) => {
                     options={options} />
             </MuiThemeProvider>
             <div className='document-miniature-container'>
-                <div className='miniature' />
+                <img className='miniature' src={sample_document} />
             </div>
         </div>
 )

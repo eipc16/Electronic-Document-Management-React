@@ -1,5 +1,7 @@
 import Alert from 'react-s-alert';
 
+import {NotificationBuilder, AlertTypes} from '../notifications/Notification'
+
 import {
     mdiLoading,
     mdiAlert,
@@ -22,7 +24,10 @@ export const sidebarElements = [{
         title: 'Alert',
         icon: mdiAlert,
         description: 'Alert',
-        onClick: () => Alert.success('OK!'),
-        noHighlight: true
+        onClick: () => {
+            const builder = new NotificationBuilder()
+
+            builder.setType(AlertTypes.SUCCESS).build().show("HEJ!")
+        }
     }
 ];

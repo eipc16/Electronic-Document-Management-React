@@ -36,10 +36,10 @@ const defaultOptions = {
 
 export default defaultOptions;
 
-export class Notification {
-  private alertType: AlertTypes;
-  private message: string;
-  private options: object;
+export class AlertNotification {
+  private readonly alertType: AlertTypes;
+  private readonly message: string;
+  private readonly options: object;
 
   constructor(
     alertType: AlertTypes,
@@ -119,7 +119,7 @@ export class NotificationBuilder {
   }
 
   build() {
-    return new Notification(
+    return new AlertNotification(
       this.alertType,
       this.position,
       this.effect,

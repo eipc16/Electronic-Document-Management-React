@@ -31,7 +31,7 @@ const DocumentVersions = (props: DocumentVerionsProps) => {
     };
 
     return (
-        <div className='document-info Verions'>
+        <div className='document-info versions'>
             <MuiThemeProvider theme={customTheme}>
                 <MUIDataTable
                     columns={props.versions.table.columns}

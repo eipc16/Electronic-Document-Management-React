@@ -8,6 +8,8 @@ import {connect} from "react-redux";
 import {DocumentTableData} from "../../../redux/types/Documents";
 import {ErrorPage} from "../../../common/ErrorPage";
 
+import '../styles/DocumentHistory.scss'
+
 interface StateProps {
     history?: DocumentTableData;
 }

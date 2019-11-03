@@ -47,11 +47,20 @@ class DocumentComments extends React.Component<DocumentCommentsProps> {
                     styles={{
                         comment: base => ({
                             ...base,
-                            textAlign: 'left'
+                            textAlign: 'left',
+                            maxWidth: 'inherit',
+                            textWrap: 'break-words'
                         }),
                         btn: base => ({
                             ...base,
                             float: 'right'
+                        }),
+                        textarea: base => ({
+                            ...base,
+                            minHeight: '100px',
+                            maxHeight: '100%',
+                            height: 'auto',
+                            resize: 'vertical'
                         })
                     }}
                 />
