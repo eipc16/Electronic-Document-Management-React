@@ -6,7 +6,7 @@ import { Route } from 'react-router-dom';
 import CustomSidebar from './sidebar/Sidebar';
 import { ActionBlocker } from './actionblocker/ActionBlocker'
 import { sidebarElements } from './static/sidebar';
-import { DocumentsListPage } from './documents/DocumentsListPage';
+import DocumentsListPage from './documents/DocumentsListPage';
 import { FlowChartPage } from './flowcharts/FlowChartsPage';
 
 const App: React.FC = (props: any) => {

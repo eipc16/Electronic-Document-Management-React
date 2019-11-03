@@ -2,9 +2,8 @@ import React, { Dispatch } from 'react'
 import { actions, FlowChart, IChart, IConfig, IFlowChartComponents } from "@mrblenny/react-flow-chart";
 import { mapFlowChartFromDTO, mapFlowChartToDTO} from '../mapper/FlowChartMapper';
 import { FlowChartActions } from '../../redux/types/FlowChart';
-import {setFlowChartCallbacks, updateFlowChart} from '../../redux/actions/FlowChart';
+import {updateFlowChart} from '../../redux/actions/FlowChart';
 import { connect } from 'react-redux';
-import { Button } from 'react-native-paper';
 import {GestureResponderEvent} from 'react-native';
 import Alert from 'react-s-alert';
 import FlowChartActionButtons from "./FlowChartActionButtons";
@@ -15,12 +14,12 @@ import {CustomLink} from "../links/CustomLink";
 import {CustomPort} from "../ports/CustomPort";
 import {CanvasOuterCustom} from "./FlowChartCanvas";
 import CustomNode from "../nodes/CustomNode";
-import FlowChartCanvasData from "./FlowChartCanvasData";
 import {IOnLinkCompleteInput} from "@mrblenny/react-flow-chart/src";
 
 export interface FlowChartStateProps {
   initialValue: FlowChartState;
   config?: IConfig;
+  readOnly?: boolean;
 }
 
 interface DispatchProps {
@@ -76,8 +75,14 @@ class StatefulFlowchart extends React.Component<ComponentProps, FlowChartState> 
 
     doubleClickHandler = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       event.preventDefault();
+
+      if(this.props.config && this.props.config.readonly) {
+          return;
+      }
+
+      const x = Math.random();
+
       // get form from sever, push results to state
-        const x = Math.random();
       this.addNode({
         id: `${x}`,
             type: "input-output",
@@ -143,7 +148,7 @@ class StatefulFlowchart extends React.Component<ComponentProps, FlowChartState> 
             validateLink: ({fromNodeId, fromPortId, toNodeId, toPortId, chart}: IOnLinkCompleteInput & {chart: IChart}): boolean => {
                 let sourceLinks = 0;
                 let targetLinks = 0;
-                for (let [,value] of Object.entries(chart.links)) {
+                for (const [,value] of Object.entries(chart.links)) {
                     if(value.from.nodeId === fromNodeId && value.from.portId === fromPortId) {
                         sourceLinks++;
                     }
@@ -194,13 +199,17 @@ class StatefulFlowchart extends React.Component<ComponentProps, FlowChartState> 
                     return <CustomLink {...props} stateActions={this.stateActions} flowChartState={chart} scale={scale} changePort={this.setPortResult}/>
                 }
             }}
-            config={config}
+            config={{
+                ...config,
+                readonly: false
+            }}
             />
           </div>
           <FlowChartActionButtons
             onSaveFlowChart={this.useSaveState}
             onResetFlowChart={this.useClearState}
             onCenterCanvas={this.setCanvasPosition}
+            readOnly={this.props.readOnly ? this.props.readOnly : false}
           />
           {/*<FlowChartCanvasData />*/}
         </div>

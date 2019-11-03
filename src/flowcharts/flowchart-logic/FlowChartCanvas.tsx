@@ -10,8 +10,10 @@ export const CanvasOuterCustom = styled.div<ICanvasOuterDefaultProps>`
       background-image:
         linear-gradient(90deg,hsla(0,0%,100%,.1) 1px,transparent 0),
         linear-gradient(180deg,hsla(0,0%,100%,.1) 1px,transparent 0);
-      max-width: 100vw;
-      max-height: 96vh;
+      height: 'inherit';
+      width: 'inherit';
+      max-width: 'inherit';
+      max-height: 'inherit';
       overflow: hidden;
       cursor: pointer;
 `;

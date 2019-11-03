@@ -4,6 +4,8 @@ export const UPDATE_FLOW_CHART = 'UPDATE_FLOW_CHART';
 export const SET_PORT_TYPE = 'SET_PORT_TYPE';
 export const SET_FLOW_CHART_CALLBACKS = 'SET_FLOW_CHART_CALLBACKS';
 
+export const FETCH_FLOWCHART = 'FETCH_FLOWCHART';
+
 export interface PortIdentifier {
     nodeId?: string;
     portId?: string;

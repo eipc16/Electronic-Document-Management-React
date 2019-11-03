@@ -27,7 +27,7 @@ const getPort = (flowChartState: FlowChartState, nodeId: string, portId: string)
 
 const nodeHasLink = (flowChartState: FlowChartState, nodeId: string, portId: string) => {
     let counter = 0;
-    for(let [,value] of Object.entries(flowChartState.links)) {
+    for(const [,value] of Object.entries(flowChartState.links)) {
         if(value.from.nodeId === nodeId && value.from.portId === portId) {
             counter++;
         }

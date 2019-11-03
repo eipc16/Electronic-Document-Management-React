@@ -65,6 +65,7 @@ $background-color: white;
     flex-direction: column;
     grid-area: main;
     overflow-x: hidden;
+    max-height: 96vh;
     position: relative;
 }
 
@@ -179,11 +180,19 @@ $background-color: white;
 .flowchart-container {
     position: relative;
     overflow: hidden;
+    max-height: inherit;
+    height: inherit;
+    max-width: inherit;
+    width: inherit;
 }
 
 .flowchart {
     position: relative;
     overflow: hidden;
+    max-height: inherit;
+    height: inherit;
+    max-width: inherit;
+    width: inherit;
 }
 
 .flowchart-action-buttons {

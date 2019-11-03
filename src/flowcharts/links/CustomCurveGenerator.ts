@@ -24,11 +24,12 @@ const generateNormalPath = (startPos: IPosition, endPos: IPosition, vertical_off
 };
 
 const getOffsetPath = (startPos: IPosition, endPos: IPosition, offset: number, vertical_offset: number, horizontal_offset: number): string => {
-    const leftToRight = startPos.x < endPos.y;
-    const directedOffset = leftToRight ? offset : -offset;
+    const leftToRight = startPos.x < endPos.x;
     const start = leftToRight ? startPos : endPos;
     const end = leftToRight ? endPos : startPos;
     const heightOffset = leftToRight ? vertical_offset: -vertical_offset;
+
+    const split = Math.abs(startPos.x - endPos.x) / 2;
 
     let horizontal_offset_start, horizontal_offset_end;
 
@@ -42,9 +43,9 @@ const getOffsetPath = (startPos: IPosition, endPos: IPosition, offset: number, v
 
     return `M${start.x - horizontal_offset_start},${start.y}
             L${start.x - horizontal_offset_start},${start.y + heightOffset}
-            L${start.x + directedOffset},${start.y + heightOffset}
-            L${start.x + directedOffset},${end.y - heightOffset}
-            L${end.x - horizontal_offset_end},${end.y - heightOffset}
+            L${start.x + split},${start.y + heightOffset}
+            L${start.x + split},${end.y - heightOffset}
+            L${end.x + horizontal_offset_end},${end.y - heightOffset}
             ${end.x - horizontal_offset_end},${end.y}`
 };
 
@@ -54,4 +55,4 @@ export const customCurvePath = (startPos: IPosition, endPos: IPosition, linkType
     }
 
     return generateNormalPath(startPos, endPos, linkType === 'correct' ? 40 : 35, linkType === 'correct' ? 0 : 0);
-}
+};
