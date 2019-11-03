@@ -60,7 +60,7 @@ const DropdownSearchField: React.FC<SearchFieldProps> = props => {
   const {uuid, label, value, options, name} = fieldState
 
   return (
-        <div className="input-container" key={name}>
+        <div className="input-container dropdown-search" key={name}>
           <label htmlFor="search-box" className={labelClass}>{label}</label>
           <Select
             label={label}
@@ -78,15 +78,16 @@ const DropdownSearchField: React.FC<SearchFieldProps> = props => {
 export const getSearchBoxComponent = (props: SearchFieldProps) => {
   return (
     <DropdownSearchField 
-      uuid={props.uuid}
-      formUuid={props.formUuid}
-      name={props.name}
-      type={props.type}
-      label={props.label}
-      defaultValue={props.defaultValue}
-      options={props.options}
-      required={props.required}
-      validator={props.validator}
+        key={props.uuid}
+        uuid={props.uuid}
+        formUuid={props.formUuid}
+        name={props.name}
+        type={props.type}
+        label={props.label}
+        defaultValue={props.defaultValue}
+        options={props.options}
+        required={props.required}
+        validator={props.validator}
     />
   )
 }

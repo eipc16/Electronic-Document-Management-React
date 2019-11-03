@@ -1,24 +1,92 @@
 import React from 'react';
-import { form_1 } from '../static/forms';
-import { getForm, FormType } from '../wizards/Wizard';
+import SplitterLayout from 'react-splitter-layout';
+import 'react-splitter-layout/lib/index.css';
 
-export const DocumentsListPage: React.FC = (props: any) => {
+import './Documents.scss';
+import DocumentList from "./list/DocumentList";
+import DocumentInformations from "./details/DocumentInformations";
+import {ReduxStore} from "../utils/ReduxUtils";
+import {connect} from "react-redux";
+import {setLastSplitterAction, setSelectedDocument} from "../redux/actions/Documents";
+import {
+    ChangeSplitProportionsAction,
+    PRIMARY_MIN_SIZE,
+    SECONDARY_MIN_SIZE,
+    setSplitterChangeTransition,
+    SPLITTER_MAX_SECONDARY_ACTION,
+    SPLITTER_MIN_SECONDARY_ACTION,
+    SPLITTER_SIZE_ERROR_THRESHOLD
+} from "./SplitterUtils";
 
-    const form = form_1
-
-    return getForm(form.title, form.uuid, form.fields, form.endpoint, FormType.NORMAL)
+interface DispatchProps {
+    setSelectedItem: (id: string) => void;
+    resetSelection: () => void;
+    setLastSplitterAction: (action: ChangeSplitProportionsAction) => void;
 }
 
-/*
+interface StateProps {
+    selectedItem?: string | null;
+    lastSplitterAction: ChangeSplitProportionsAction;
+}
 
-  const builder = new NotificationBuilder();
+export type DocumentsListPageProps = StateProps & DispatchProps;
 
-  const notification = builder
-    .allowHTML(true)
-    .setEffect(AlertEffects.SLIDE)
-    .setPosition(AlertPositions.TOP)
-    .setType(AlertTypes.WARNING)
-    .setTimeout(10000)
-    .build();
+const DocumentsListPage = (props: DocumentsListPageProps) => {
+    const { selectedItem } = props;
+    const detailsVisible = selectedItem !== null;
+    let className = 'document-page';
 
-*/
+    if(detailsVisible) {
+        className = `${className} splitter`
+    }
+
+    const handleSplitterChange = (secondarySize: number) => {
+
+        const minThreshold = secondarySize - SECONDARY_MIN_SIZE < SPLITTER_SIZE_ERROR_THRESHOLD;
+
+        if(minThreshold && props.lastSplitterAction === SPLITTER_MAX_SECONDARY_ACTION) {
+            props.setLastSplitterAction(SPLITTER_MIN_SECONDARY_ACTION);
+        } else if(!minThreshold && props.lastSplitterAction === SPLITTER_MIN_SECONDARY_ACTION) {
+            props.setLastSplitterAction(SPLITTER_MAX_SECONDARY_ACTION);
+        }
+    };
+
+    return (
+        <div className={className}>
+            { detailsVisible ? (
+                <SplitterLayout
+                    vertical={true}
+                    percentage={true}
+                    primaryMinSize={PRIMARY_MIN_SIZE}
+                    secondaryMinSize={SECONDARY_MIN_SIZE}
+                    onDragStart={() => setSplitterChangeTransition(false)}
+                    onDragEnd={() => setSplitterChangeTransition(true)}
+                    onSecondaryPaneSizeChange={handleSplitterChange}
+                >
+                    <DocumentList onItemSelected={props.setSelectedItem} onManyRowsSelected={props.resetSelection}/>
+                    <DocumentInformations selectedItemId={!selectedItem ? '' : selectedItem} onCloseDialog={props.resetSelection} />
+                </SplitterLayout>
+            ) : (
+                <DocumentList onItemSelected={props.setSelectedItem} onManyRowsSelected={props.resetSelection}/>
+            )}
+        </div>
+    )
+};
+
+const mapStateToProps = (store: ReduxStore) => {
+    return {
+        selectedItem: store.documents.documentId,
+        lastSplitterAction: store.documents.lastSplitterAction
+    }
+};
+
+const mapDispatchToProps: DispatchProps = {
+    setSelectedItem: (id: string) => setSelectedDocument(id),
+    resetSelection: () => setSelectedDocument(null),
+    setLastSplitterAction: (action: ChangeSplitProportionsAction) => setLastSplitterAction(action)
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(DocumentsListPage);

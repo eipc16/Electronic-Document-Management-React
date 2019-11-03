@@ -7,7 +7,10 @@ $background-color: white;
     height: 96vh;
     margin: $standard-margin;
     display: grid;
-    grid-template: "list workshop action-list" / 100fr auto 100fr;
+    grid-template-columns: 0.2fr 1fr;
+    grid-template-rows: 0.2fr 1fr;
+    grid-template-areas: "list main" "list main";
+    position: relative;
     grid-row-gap: $row-margin;
     row-gap: $row-margin;
     grid-column-gap: $column-margin;
@@ -37,32 +40,38 @@ $background-color: white;
     border-right: 1px lightgrey solid;
 }
 
-.flow-chart-workshop {
-    grid-area: workshop;
-    display: grid;
-    grid-template: "title" 50px "main-area" auto;
+.flow-chart-title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    height: 50px;
+    z-index: 3;
+    box-shadow: 0 5px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    &>p {
+        text-transform: uppercase;
+        font-size: 1.5rem;
+        height: 100%;
+        top: 50%;
+        transform: translateY(25%);
+        margin-top: auto;
+        margin-bottom: auto;
+        vertical-align: center;
+    }
+}
+
+.flow-chart-main-area {
     flex-direction: column;
-    row-gap: 5px;
-    grid-row-gap: 5px;
-    overflow: hidden;
-    &>.flow-chart-main-area {
-        grid-area: main-area;
-        overflow: hidden;
-    }
-    &>.flow-chart-title {
-        grid-area: title;
-        box-shadow: 0 5px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-        &>p {
-            text-transform: uppercase;
-            font-size: 1.5rem;
-            height: 100%;
-            top: 50%;
-            transform: translateY(25%);
-            margin-top: auto;
-            margin-bottom: auto;
-            vertical-align: center;
-        }
-    }
+    grid-area: main;
+    overflow-x: hidden;
+    max-height: 96vh;
+    position: relative;
+}
+
+.flow-chart-workshop {
+    width: max-content;
+    height: max-content;
 }
 
 .list-position {
@@ -71,7 +80,7 @@ $background-color: white;
     text-align: left;
     padding-left: 10px;
     font-size: 1.1rem;
-    font-style: bold;
+    font-style: oblique;
     display: flex;
     flex-direction: column;
     &:hover {
@@ -170,14 +179,30 @@ $background-color: white;
 
 .flowchart-container {
     position: relative;
-    background-color: red;
-    border: 5px solid;
-    height: 50vw;
+    overflow: hidden;
+    max-height: inherit;
+    height: inherit;
+    max-width: inherit;
+    width: inherit;
 }
 
-.save-flowchart-button {
+.flowchart {
+    position: relative;
+    overflow: hidden;
+    max-height: inherit;
+    height: inherit;
+    max-width: inherit;
+    width: inherit;
+}
+
+.flowchart-action-buttons {
     position: absolute;
-    top: 15px;
-    right: 15px;
-    z-index: 999;
+    bottom: 10px;
+    right: 10px;
+
+    & > div {
+        margin-bottom: 5px;
+        margin-right: 5px;
+        width: auto;
+    }
 }

@@ -6,7 +6,7 @@ import { Route } from 'react-router-dom';
 import CustomSidebar from './sidebar/Sidebar';
 import { ActionBlocker } from './actionblocker/ActionBlocker'
 import { sidebarElements } from './static/sidebar';
-import { DocumentsListPage } from './documents/DocumentsListPage';
+import DocumentsListPage from './documents/DocumentsListPage';
 import { FlowChartPage } from './flowcharts/FlowChartsPage';
 
 const App: React.FC = (props: any) => {
@@ -19,7 +19,7 @@ const App: React.FC = (props: any) => {
       <CustomSidebar className="side-bar" elements={sidebarElements} {...props} />
       <div className="main-container">
         <Route exact path="/" component={DocumentsListPage} />
-        <Route exact path="/flowcharts" component={FlowChartPage} />
+        <Route path="/flowcharts/:flowchartId?" component={FlowChartPage} />
       </div>
     </div>
   );
