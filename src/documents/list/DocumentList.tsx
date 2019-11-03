@@ -3,6 +3,7 @@ import MUIDataTable, { MUIDataTableOptions } from 'mui-datatables';
 
 import '../Documents.scss';
 import {createMuiTheme, MuiThemeProvider} from "@material-ui/core";
+import {customTheme} from "../details/styles/CustomDataTableTheme";
 
 const columns = ["Column 1", "Column2", "Column 3", "Column 4"]
 
@@ -36,50 +37,8 @@ const DocumentList = (props: DocumentListProps) => {
     const tableOptions: MUIDataTableOptions = {
         onRowClick: (rowData) => {
             props.onItemSelected(rowData[0]);
-        },
-        onRowsSelect: currentRowsSelected => {
-            if(currentRowsSelected.length === 1) {
-                props.onItemSelected(currentRowsSelected[0][0]);
-            } else {
-                props.onManyRowsSelected();
-            }
         }
     };
-
-    const customTheme = createMuiTheme({
-        overrides: {
-            MuiPaper: {
-              root: {
-                  scrollbarWidth: 'none',
-                  height: 'inherit',
-                  position: 'relative',
-                  '& > div': {
-                      maxHeight: '80%'
-                  },
-                  '& > .MuiPaper-root': {
-                      height: 'fit-content'
-                  }
-              }
-            },
-            MuiTable: {
-                root: {
-                    maxHeight: '80vh'
-                }
-            },
-            MuiTableRow: {
-                footer: {
-                    position: 'absolute',
-                    backgroundColor: 'white',
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    width: '100%',
-                    zIndex: 100,
-                    bottom: '0',
-                    right: '0',
-                }
-            }
-        }
-    });
 
     return (
         <div className='document-list'>

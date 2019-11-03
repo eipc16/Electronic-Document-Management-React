@@ -4,12 +4,17 @@ import '../Documents.scss';
 import {connect} from "react-redux";
 import {ReduxStore} from "../../utils/ReduxUtils";
 import {ErrorPage} from "../../common/ErrorPage";
-import {DocumentComments, DocumentDetails, DocumentFlowChart, DocumentHistory} from "./DocumentInfoTypes";
+import {DocumentFlowChart} from "./info-types/DocumentFlowChart";
+import DocumentComments from "./info-types/DocumentComments";
+import DocumentVersions from "./info-types/DocumentVersions";
+import DocumentHistory from './info-types/DocumentHistory';
+import DocumentDetails from "./info-types/DocumentDetails";
 
 export const DOCUMENT_DETAILS_PAGE = 'details';
 export const DOCUMENT_FLOWCHART_PAGE = 'flow-chart';
 export const DOCUMENT_COMMENTS_PAGE = 'comments';
 export const DOCUMENT_HISTORY_PAGE = 'history';
+export const DOCUMENT_VERSIONS_PAGE = 'versions';
 
 interface StateProps {
     page?: string;
@@ -34,6 +39,8 @@ const DocumentInfo: React.FC<DocumentInfoProps> = (props: DocumentInfoProps) => 
             return <DocumentComments selectedItemId={documentId} />;
         case DOCUMENT_HISTORY_PAGE:
             return <DocumentHistory selectedItemId={documentId} />;
+        case DOCUMENT_VERSIONS_PAGE:
+            return <DocumentVersions selectedItemId={documentId} />;
         default:
             return <ErrorPage />
     }

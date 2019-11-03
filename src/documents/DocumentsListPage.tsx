@@ -26,6 +26,7 @@ interface DispatchProps {
 
 interface StateProps {
     selectedItem?: string | null;
+    lastSplitterAction: ChangeSplitProportionsAction;
 }
 
 export type DocumentsListPageProps = StateProps & DispatchProps;
@@ -40,9 +41,12 @@ const DocumentsListPage = (props: DocumentsListPageProps) => {
     }
 
     const handleSplitterChange = (secondarySize: number) => {
-        if(secondarySize - SECONDARY_MIN_SIZE < SPLITTER_SIZE_ERROR_THRESHOLD) {
+
+        const minThreshold = secondarySize - SECONDARY_MIN_SIZE < SPLITTER_SIZE_ERROR_THRESHOLD;
+
+        if(minThreshold && props.lastSplitterAction === SPLITTER_MAX_SECONDARY_ACTION) {
             props.setLastSplitterAction(SPLITTER_MIN_SECONDARY_ACTION);
-        } else {
+        } else if(!minThreshold && props.lastSplitterAction === SPLITTER_MIN_SECONDARY_ACTION) {
             props.setLastSplitterAction(SPLITTER_MAX_SECONDARY_ACTION);
         }
     };
@@ -71,7 +75,8 @@ const DocumentsListPage = (props: DocumentsListPageProps) => {
 
 const mapStateToProps = (store: ReduxStore) => {
     return {
-        selectedItem: store.documents.documentId
+        selectedItem: store.documents.documentId,
+        lastSplitterAction: store.documents.lastSplitterAction
     }
 };
 

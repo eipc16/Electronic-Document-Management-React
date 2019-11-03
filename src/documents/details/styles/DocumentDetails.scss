@@ -1,0 +1,27 @@
+.doc-details {
+  display: grid;
+  grid-template: "details miniature" / 1.2fr 1fr;
+  grid-column-gap: 5px;
+  margin: 25px;
+  & > div {
+    grid-area: details;
+    height: available;
+  }
+
+  & > .document-miniature-container {
+    grid-area: miniature;
+  }
+}
+
+.document-miniature-container {
+  width: available;
+  height: available;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+}
+.miniature {
+  width: 600px;
+  height: 600px;
+  background-color: red;
+}

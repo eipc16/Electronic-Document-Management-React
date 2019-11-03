@@ -46,8 +46,8 @@ export function changeSplitterState(type: ChangeSplitProportionsAction) {
     setSplitterChangeTransition(true, (primary, secondary) => {
         switch(type) {
             case SPLITTER_MAX_SECONDARY_ACTION:
-                primary.style.height = `${PRIMARY_MIN_SIZE}%`;
-                secondary.style.height = `${SECONDARY_MAX_SIZE}%`;
+                primary.style.height = `${0}%`;
+                secondary.style.height = `${100}%`;
                 break;
             case SPLITTER_MIN_SECONDARY_ACTION:
                 primary.style.height = `${PRIMARY_MAX_SIZE}%`;

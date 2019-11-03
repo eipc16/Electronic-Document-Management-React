@@ -5,7 +5,7 @@ import {
     DOCUMENT_COMMENTS_PAGE,
     DOCUMENT_DETAILS_PAGE,
     DOCUMENT_FLOWCHART_PAGE,
-    DOCUMENT_HISTORY_PAGE
+    DOCUMENT_HISTORY_PAGE, DOCUMENT_VERSIONS_PAGE
 } from "./DocumentInfo";
 import {ReduxStore} from "../../utils/ReduxUtils";
 
@@ -41,6 +41,10 @@ const selectors: SelectorInterface[] = [
         name: DOCUMENT_COMMENTS_PAGE,
         displayName: 'Comments'
     },
+    {
+        name: DOCUMENT_VERSIONS_PAGE,
+        displayName: 'Versions'
+    }
 ]
 
 const DocumentDetailsSelector = (props: DetailsSelectorProps) => {
