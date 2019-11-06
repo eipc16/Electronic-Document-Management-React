@@ -1,57 +1,77 @@
-import React from 'react';
+import React, {useState} from 'react';
 import MUIDataTable, { MUIDataTableOptions } from 'mui-datatables';
 
 import '../Documents.scss';
 import {createMuiTheme, MuiThemeProvider} from "@material-ui/core";
 import {customTheme} from "../details/styles/CustomDataTableTheme";
+import {ReduxStore} from "../../utils/ReduxUtils";
+import {connect} from "react-redux";
 
-const columns = ["Column 1", "Column2", "Column 3", "Column 4"]
-
-const data = [
-    ["1", "Test Corp", "Yonkers", "NY"],
-    ["2", "Test Corp", "Hartford", "CT"],
-    ["3", "Test Corp", "Tampa", "FL"],
-    ["4", "Test Corp", "Dallas", "TX"],
-    ["5", "Test Corp", "Yonkers", "NY"],
-    ["6", "Test Corp", "Hartford", "CT"],
-    ["7", "Test Corp", "Tampa", "FL"],
-    ["8", "Test Corp", "Dallas", "TX"],
-    ["9", "Test Corp", "Yonkers", "NY"],
-    ["10", "Test Corp", "Hartford", "CT"],
-    ["11", "Test Corp", "Tampa", "FL"],
-    ["12", "Test Corp", "Dallas", "TX"],
-    ["13", "Test Corp", "Dallas", "TX"],
-    ["14", "Test Corp", "Yonkers", "NY"],
-    ["15", "Test Corp", "Hartford", "CT"],
-    ["16", "Test Corp", "Tampa", "FL"],
-    ["17", "Test Corp", "Dallas", "TX"],
-];
 
 export interface DocumentListProps {
     onItemSelected: (index: string) => void;
     onManyRowsSelected: () => void;
+    data: string[][];
+    columns: string[];
 }
 
-const DocumentList = (props: DocumentListProps) => {
+interface StateProps {
+    selectedItem?: string | null;
+}
 
-    const tableOptions: MUIDataTableOptions = {
-        onRowClick: (rowData) => {
-            props.onItemSelected(rowData[0]);
+class DocumentList extends  React.Component<DocumentListProps & StateProps, {previousClick: string}> {
+
+    constructor(props: DocumentListProps & StateProps) {
+        super(props);
+
+        this.state = {
+            previousClick: ""
+        }
+    }
+
+    setPreviousClick = (dataIndex: number) => {
+        const selectedItem = this.props.selectedItem;
+
+        if(selectedItem || selectedItem === null) {
+
+            const data = this.props.data[dataIndex][0];
+
+            if(selectedItem !== data || selectedItem === null) {
+                this.props.onItemSelected(data);
+            } else {
+                this.props.onManyRowsSelected();
+            }
         }
     };
 
-    return (
-        <div className='document-list'>
-            <MuiThemeProvider theme={customTheme}>
-                <MUIDataTable
-                    title={"New table"}
-                    data={data}
-                    columns={columns}
-                    options={tableOptions}
-                />
-            </MuiThemeProvider>
-        </div>
-    )
+    tableOptions: MUIDataTableOptions = {
+        onRowClick: (rowData, rowMeta) => {
+            this.setPreviousClick(rowMeta.dataIndex);
+        },
+        selectableRows: 'single' || 'multiple',
+        selectableRowsOnClick: true
+    };
+
+    render() {
+        return (
+            <div className='document-list'>
+                <MuiThemeProvider theme={customTheme}>
+                    <MUIDataTable
+                        title={"New table"}
+                        data={this.props.data}
+                        columns={this.props.columns}
+                        options={this.tableOptions}
+                    />
+                </MuiThemeProvider>
+            </div>
+        )
+    }
+}
+
+const mapStateToProps = (store: ReduxStore) => {
+    return {
+        selectedItem: store.documents.documentId
+    }
 };
 
-export default DocumentList;
+export default connect(mapStateToProps, null)(DocumentList);

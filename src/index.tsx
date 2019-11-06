@@ -8,24 +8,22 @@ import * as serviceWorker from './serviceWorker';
 import Alert from 'react-s-alert';
 import defaultOptions from './notifications/Notification';
 
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
+import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 
-import { Provider as ReduxProvider } from 'react-redux';
-import { createStore, applyMiddleware, Reducer, StoreEnhancer } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension'
+import {Provider as ReduxProvider} from 'react-redux';
+import {applyMiddleware, createStore, Reducer, StoreEnhancer} from 'redux';
+import {composeWithDevTools} from 'redux-devtools-extension'
+import createSagaMiddleware from 'redux-saga';
 import thunkMiddleware from 'redux-thunk'
 import rootReducer from './redux/reducers/'
 
-import { BrowserRouter as Router, Route} from 'react-router-dom'
+import {BrowserRouter as Router} from 'react-router-dom'
 
 import DateFnsUtils from '@date-io/date-fns';
 
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/slide.css';
-import { FlowChartPage } from './flowcharts/FlowChartsPage';
-
-import history from './utils/history'
 
 const theme = {
   ...DefaultTheme,
@@ -37,34 +35,35 @@ const theme = {
   }
 };
 
+const sagaMiddleware = createSagaMiddleware()
+
 function configureStore(reducer: Reducer) {
-  const middlewares = [thunkMiddleware]
-  const middlewareEnhancer = applyMiddleware(...middlewares)
 
-  const enhancers = [middlewareEnhancer]
-  const composedEnhancers: StoreEnhancer = composeWithDevTools(...enhancers)
+    const middlewares = [thunkMiddleware, sagaMiddleware];
+    const middlewareEnhancer = applyMiddleware(...middlewares);
 
-  const store = createStore(reducer, undefined, composedEnhancers)
+    const enhancers = [middlewareEnhancer]
+    const composedEnhancers: StoreEnhancer = composeWithDevTools(...enhancers);
 
-  return store
+    return createStore(reducer, undefined, composedEnhancers);
 }
 
-const store = configureStore(rootReducer)
+const store = configureStore(rootReducer);
 
 const Root = () => {
-  return (
-    <Router>
-      <ReduxProvider store={store}>
-      <PaperProvider theme={theme}>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <App/>
-        </MuiPickersUtilsProvider>
-      </PaperProvider>
-      <Alert stack={{ limit: 3 }} {...defaultOptions} />
-      </ReduxProvider>
-    </Router>
-  )
-}
+    return (
+        <Router>
+          <ReduxProvider store={store}>
+          <PaperProvider theme={theme}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <App/>
+            </MuiPickersUtilsProvider>
+          </PaperProvider>
+          <Alert stack={{ limit: 3 }} {...defaultOptions} />
+          </ReduxProvider>
+        </Router>
+    )
+};
 
 ReactDOM.render(<Root />, document.getElementById('root'));
 

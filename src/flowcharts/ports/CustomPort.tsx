@@ -37,7 +37,7 @@ const isOfType = (port: FlowChartPort, type: string, result?: string) => {
 };
 
 const getSourcePortType = (port: FlowChartPort, state: FlowChartState) => {
-    for(let [,value] of Object.entries(state.links)) {
+    for(const [,value] of Object.entries(state.links)) {
         if(value.to.portId === port.id) {
             const sourcePortNodeId = value.from.nodeId;
             const sourcePortId = value.from.portId;

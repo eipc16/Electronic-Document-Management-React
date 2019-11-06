@@ -30,6 +30,16 @@ export const customTheme = createMuiTheme({
                 zIndex: 100,
                 bottom: '0',
                 right: '0',
+            },
+            root: {
+                '&$selected': {
+                    backgroundColor: "lightblue"
+                }
+            }
+        },
+        MuiSelect: {
+            root: {
+                display: 'none'
             }
         }
     }

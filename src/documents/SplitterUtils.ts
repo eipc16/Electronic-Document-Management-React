@@ -33,7 +33,7 @@ export function setSplitterChangeTransition(transition: boolean,
     }
 }
 
-export async function hideSecondaryPane(callback: () => void) {
+export function hideSecondaryPane(callback: () => void) {
     setSplitterChangeTransition(true, (primary, secondary) => {
         primary.style.height = `100$`;
         secondary.style.height = '0%';

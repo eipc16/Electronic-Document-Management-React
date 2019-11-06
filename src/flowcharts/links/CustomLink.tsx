@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {generateCurvePath, ILinkDefaultProps} from "@mrblenny/react-flow-chart/src";
 import {FlowChartLink, FlowChartPort, FlowChartState} from "../mapper/FlowChartInterfaces";
-import {useNodeById, usePortByIdAndNodeId, useSetPortType} from "../../utils/ReduxUtils";
 import {customCurvePath} from "./CustomCurveGenerator";
 
 const getColorFromPort = (port?: FlowChartPort) => {
@@ -63,10 +62,6 @@ export const CustomLink = (props: ILinkDefaultProps & LinkCustomProps) => {
     if(portFrom && portFrom.type !== 'output' || (portTo && portTo.type !== 'input')) {
         return null;
     }
-
-    // if(portTo && portFrom && portTo.properties.result !== portFrom.properties.result) {
-    //     props.changePort(linkData.to.nodeId, linkData.to.portId, portFrom.properties.result);
-    // }
 
     const color = getColorFromPort(portFrom);
     let points;

@@ -38,7 +38,7 @@ const DocumentDetails = (props: DocumentDetailsProps) => {
                 <MUIDataTable
                     columns={props.details.table.columns}
                     data={props.details.table.data}
-                    title={props.details.table.title}
+                    title={props.details.table.title + " | " + props.selectedItemId}
                     options={options} />
             </MuiThemeProvider>
             <div className='document-miniature-container'>

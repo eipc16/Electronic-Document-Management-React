@@ -9,7 +9,7 @@ import {ReduxStore} from "../utils/ReduxUtils";
 import {connect} from "react-redux";
 import {setLastSplitterAction, setSelectedDocument} from "../redux/actions/Documents";
 import {
-    ChangeSplitProportionsAction,
+    ChangeSplitProportionsAction, hideSecondaryPane,
     PRIMARY_MIN_SIZE,
     SECONDARY_MIN_SIZE,
     setSplitterChangeTransition,
@@ -28,6 +28,28 @@ interface StateProps {
     selectedItem?: string | null;
     lastSplitterAction: ChangeSplitProportionsAction;
 }
+
+const columns = ["Column 1", "Column2", "Column 3", "Column 4"]
+
+const data = [
+    ["1", "Test Corp", "Yonkers", "NY"],
+    ["2", "Test Corp", "Hartford", "CT"],
+    ["3", "Test Corp", "Tampa", "FL"],
+    ["4", "Test Corp", "Dallas", "TX"],
+    ["5", "Test Corp", "Yonkers", "NY"],
+    ["6", "Test Corp", "Hartford", "CT"],
+    ["7", "Test Corp", "Tampa", "FL"],
+    ["8", "Test Corp", "Dallas", "TX"],
+    ["9", "Test Corp", "Yonkers", "NY"],
+    ["10", "Test Corp", "Hartford", "CT"],
+    ["11", "Test Corp", "Tampa", "FL"],
+    ["12", "Test Corp", "Dallas", "TX"],
+    ["13", "Test Corp", "Dallas", "TX"],
+    ["14", "Test Corp", "Yonkers", "NY"],
+    ["15", "Test Corp", "Hartford", "CT"],
+    ["16", "Test Corp", "Tampa", "FL"],
+    ["17", "Test Corp", "Dallas", "TX"],
+];
 
 export type DocumentsListPageProps = StateProps & DispatchProps;
 
@@ -51,6 +73,10 @@ const DocumentsListPage = (props: DocumentsListPageProps) => {
         }
     };
 
+    const closeInformations = () => {
+        hideSecondaryPane(props.resetSelection)
+    }
+
     return (
         <div className={className}>
             { detailsVisible ? (
@@ -63,11 +89,11 @@ const DocumentsListPage = (props: DocumentsListPageProps) => {
                     onDragEnd={() => setSplitterChangeTransition(true)}
                     onSecondaryPaneSizeChange={handleSplitterChange}
                 >
-                    <DocumentList onItemSelected={props.setSelectedItem} onManyRowsSelected={props.resetSelection}/>
-                    <DocumentInformations selectedItemId={!selectedItem ? '' : selectedItem} onCloseDialog={props.resetSelection} />
+                    <DocumentList onItemSelected={props.setSelectedItem} onManyRowsSelected={closeInformations} data={data} columns={columns}/>
+                    <DocumentInformations selectedItemId={!selectedItem ? '' : selectedItem} onCloseDialog={closeInformations} />
                 </SplitterLayout>
             ) : (
-                <DocumentList onItemSelected={props.setSelectedItem} onManyRowsSelected={props.resetSelection}/>
+                <DocumentList onItemSelected={props.setSelectedItem} onManyRowsSelected={closeInformations} data={data} columns={columns}/>
             )}
         </div>
     )

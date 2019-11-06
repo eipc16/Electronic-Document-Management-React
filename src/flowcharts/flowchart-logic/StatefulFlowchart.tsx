@@ -112,24 +112,24 @@ class StatefulFlowchart extends React.Component<ComponentProps, FlowChartState> 
     };
 
     setPortResult = (nodeId: string, portId: string, newType: string) => {
-        this.setState({
-            ...this.state,
-            nodes: {
-                ...this.state.nodes,
-                [nodeId]: {
-                    ...this.state.nodes[nodeId],
-                    ports: {
-                        ...this.state.nodes[nodeId].ports,
-                        [portId]: {
-                            ...this.state.nodes[nodeId].ports[portId],
-                            properties: {
-                                result: newType
-                            }
-                        }
-                    }
-                }
-            }
-        })
+        // this.setState({
+        //     ...this.state,
+        //     nodes: {
+        //         ...this.state.nodes,
+        //         [nodeId]: {
+        //             ...this.state.nodes[nodeId],
+        //             ports: {
+        //                 ...this.state.nodes[nodeId].ports,
+        //                 [portId]: {
+        //                     ...this.state.nodes[nodeId].ports[portId],
+        //                     properties: {
+        //                         result: newType
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // })
     };
 
     setCanvasPosition = (x: number, y: number) => {

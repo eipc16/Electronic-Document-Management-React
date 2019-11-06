@@ -49,7 +49,7 @@ const DocumentInformations = (props: DocumentInformationsProps) => {
 
     const handleCloseButton = (e: React.MouseEvent) => {
         e.preventDefault();
-        hideSecondaryPane(props.onCloseDialog)
+        props.onCloseDialog();
     };
 
     return (

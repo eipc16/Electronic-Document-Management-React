@@ -38,7 +38,7 @@ export interface DocumentsState {
     lastSplitterAction: ChangeSplitProportionsAction;
 }
 
-interface SetDocumentIdAction {
+export interface SetDocumentIdAction {
     type: typeof SET_SELECTED_DOCUMENT;
     id: string | null;
 }
