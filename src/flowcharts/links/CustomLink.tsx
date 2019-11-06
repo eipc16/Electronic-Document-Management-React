@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {generateCurvePath, ILinkDefaultProps} from "@mrblenny/react-flow-chart/src";
+import React from 'react';
+import {ILinkDefaultProps} from "@mrblenny/react-flow-chart/src";
 import {FlowChartLink, FlowChartPort, FlowChartState} from "../mapper/FlowChartInterfaces";
 import {customCurvePath} from "./CustomCurveGenerator";
 
@@ -41,7 +41,6 @@ interface LinkCustomProps {
     stateActions: any;
     flowChartState: FlowChartState;
     scale: number;
-    changePort: (nodeId: string, portId: string, newResult: string) => void;
 }
 
 export const CustomLink = (props: ILinkDefaultProps & LinkCustomProps) => {
@@ -96,7 +95,6 @@ export const CustomLink = (props: ILinkDefaultProps & LinkCustomProps) => {
                 cy={startPos.y}
                 fill={color}
             />
-            {/* Main line */}
             <path
                 d={points}
                 stroke={color}
@@ -104,7 +102,6 @@ export const CustomLink = (props: ILinkDefaultProps & LinkCustomProps) => {
                 fill="none"
                 onDragStart={onDragEvent}
             />
-            {/* Thick line to make selection easier */}
             <path
                 d={points}
                 stroke={color}

@@ -28,7 +28,7 @@ export interface DocumentTableData {
 }
 
 export interface DocumentsState {
-    documentId: string | null;
+    documentId: number | null;
     documentInfoPage: string;
     documentDetails: DocumentTableData;
     documentHistory: DocumentTableData;
@@ -40,7 +40,7 @@ export interface DocumentsState {
 
 export interface SetDocumentIdAction {
     type: typeof SET_SELECTED_DOCUMENT;
-    id: string | null;
+    id: number | null;
 }
 
 interface SetDocumentInfoPageAction {

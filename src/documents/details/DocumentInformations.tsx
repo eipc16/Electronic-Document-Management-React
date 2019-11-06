@@ -34,7 +34,6 @@ export type DocumentInformationsProps = DocumentInformations & DispatchProps & S
 
 const DocumentInformations = (props: DocumentInformationsProps) => {
     const className = 'document-informations';
-
     const handleResizeButton = (e: React.MouseEvent) => {
         e.preventDefault();
 
@@ -55,7 +54,7 @@ const DocumentInformations = (props: DocumentInformationsProps) => {
     return (
         <div className={className}>
             <DocumentDetailsSelector />
-            <DocumentInfo />
+            <DocumentInfo selectedItemIdentifier={props.selectedItemId} />
             <div className='informations-buttons-container'>
                 <div className='informations-btn resize' onClick={handleResizeButton}>
                     <Icon className="close-details-btn"

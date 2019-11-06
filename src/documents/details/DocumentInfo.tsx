@@ -16,40 +16,43 @@ export const DOCUMENT_COMMENTS_PAGE = 'comments';
 export const DOCUMENT_HISTORY_PAGE = 'history';
 export const DOCUMENT_VERSIONS_PAGE = 'versions';
 
-interface StateProps {
-    page?: string;
-    documentId?: string | null;
+interface DocumentInfoProps {
+    selectedItemIdentifier: string;
 }
 
-export type DocumentInfoProps = StateProps;
+interface StateProps {
+    page?: string;
+}
 
-const DocumentInfo: React.FC<DocumentInfoProps> = (props: DocumentInfoProps) => {
-    const { documentId, page } = props;
+type DocumentInfoCompleteProps = StateProps & DocumentInfoProps;
 
-    if(!documentId) {
+const DocumentInfo: React.FC<DocumentInfoCompleteProps> = (props: DocumentInfoCompleteProps) => {
+    const { selectedItemIdentifier, page } = props;
+
+    if(!selectedItemIdentifier) {
         return null;
     }
 
     switch(page) {
         case DOCUMENT_DETAILS_PAGE:
-            return <DocumentDetails selectedItemId={documentId} />;
+            return <DocumentDetails selectedItemId={selectedItemIdentifier} />;
         case DOCUMENT_FLOWCHART_PAGE:
-            return <DocumentFlowChart selectedItemId={documentId} />;
+            return <DocumentFlowChart selectedItemId={selectedItemIdentifier} />;
         case DOCUMENT_COMMENTS_PAGE:
-            return <DocumentComments selectedItemId={documentId} />;
+            return <DocumentComments selectedItemId={selectedItemIdentifier} />;
         case DOCUMENT_HISTORY_PAGE:
-            return <DocumentHistory selectedItemId={documentId} />;
+            return <DocumentHistory selectedItemId={selectedItemIdentifier} />;
         case DOCUMENT_VERSIONS_PAGE:
-            return <DocumentVersions selectedItemId={documentId} />;
+            return <DocumentVersions selectedItemId={selectedItemIdentifier} />;
         default:
             return <ErrorPage />
     }
 };
 
-const mapStateToProps = (state: ReduxStore) => {
+const mapStateToProps = (state: ReduxStore, ownProps: DocumentInfoProps) => {
     return {
         page: state.documents.documentInfoPage,
-        documentId: state.documents.documentId
+        ...ownProps
     }
 };
 

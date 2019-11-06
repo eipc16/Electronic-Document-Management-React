@@ -34,3 +34,7 @@ export function dateAfter(testedDate: Date, baseDate: Date) {
 
   return false;
 }
+
+export function existsAndNotNull(object: any) {
+  return object !== undefined && object !== null
+}

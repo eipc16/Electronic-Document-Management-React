@@ -17,15 +17,16 @@ import {
     SPLITTER_MIN_SECONDARY_ACTION,
     SPLITTER_SIZE_ERROR_THRESHOLD
 } from "./SplitterUtils";
+import {existsAndNotNull} from "../utils/Utils";
 
 interface DispatchProps {
-    setSelectedItem: (id: string) => void;
+    setSelectedItem: (id: number) => void;
     resetSelection: () => void;
     setLastSplitterAction: (action: ChangeSplitProportionsAction) => void;
 }
 
 interface StateProps {
-    selectedItem?: string | null;
+    selectedItem?: number | null;
     lastSplitterAction: ChangeSplitProportionsAction;
 }
 
@@ -75,7 +76,17 @@ const DocumentsListPage = (props: DocumentsListPageProps) => {
 
     const closeInformations = () => {
         hideSecondaryPane(props.resetSelection)
-    }
+    };
+
+    const getSelectedItem = () => {
+        if(existsAndNotNull(props.selectedItem)) {
+            const selectedItemId = props.selectedItem as number;
+            if(selectedItemId < data.length) {
+                return data[selectedItemId][0];
+            }
+        }
+        return '';
+    };
 
     return (
         <div className={className}>
@@ -90,7 +101,7 @@ const DocumentsListPage = (props: DocumentsListPageProps) => {
                     onSecondaryPaneSizeChange={handleSplitterChange}
                 >
                     <DocumentList onItemSelected={props.setSelectedItem} onManyRowsSelected={closeInformations} data={data} columns={columns}/>
-                    <DocumentInformations selectedItemId={!selectedItem ? '' : selectedItem} onCloseDialog={closeInformations} />
+                    <DocumentInformations selectedItemId={getSelectedItem()} onCloseDialog={closeInformations} />
                 </SplitterLayout>
             ) : (
                 <DocumentList onItemSelected={props.setSelectedItem} onManyRowsSelected={closeInformations} data={data} columns={columns}/>
@@ -107,7 +118,7 @@ const mapStateToProps = (store: ReduxStore) => {
 };
 
 const mapDispatchToProps: DispatchProps = {
-    setSelectedItem: (id: string) => setSelectedDocument(id),
+    setSelectedItem: (id: number) => setSelectedDocument(id),
     resetSelection: () => setSelectedDocument(null),
     setLastSplitterAction: (action: ChangeSplitProportionsAction) => setLastSplitterAction(action)
 };

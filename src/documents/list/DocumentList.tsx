@@ -6,50 +6,56 @@ import {createMuiTheme, MuiThemeProvider} from "@material-ui/core";
 import {customTheme} from "../details/styles/CustomDataTableTheme";
 import {ReduxStore} from "../../utils/ReduxUtils";
 import {connect} from "react-redux";
+import {existsAndNotNull} from "../../utils/Utils";
 
 
 export interface DocumentListProps {
-    onItemSelected: (index: string) => void;
+    onItemSelected: (index: number) => void;
     onManyRowsSelected: () => void;
     data: string[][];
     columns: string[];
 }
 
 interface StateProps {
-    selectedItem?: string | null;
+    selectedItem?: number | null;
 }
 
-class DocumentList extends  React.Component<DocumentListProps & StateProps, {previousClick: string}> {
+class DocumentList extends  React.Component<DocumentListProps & StateProps> {
 
     constructor(props: DocumentListProps & StateProps) {
         super(props);
-
-        this.state = {
-            previousClick: ""
-        }
     }
 
-    setPreviousClick = (dataIndex: number) => {
+    setSelectedItem = (dataIndex: number) => {
         const selectedItem = this.props.selectedItem;
 
         if(selectedItem || selectedItem === null) {
-
-            const data = this.props.data[dataIndex][0];
-
-            if(selectedItem !== data || selectedItem === null) {
-                this.props.onItemSelected(data);
+            if(selectedItem !== dataIndex || selectedItem === null) {
+                this.props.onItemSelected(dataIndex);
             } else {
                 this.props.onManyRowsSelected();
             }
         }
     };
 
+    selectedRows = () => {
+        if(existsAndNotNull(this.props.selectedItem)) {
+            return [this.props.selectedItem as number];
+        }
+        return [];
+    }
+
     tableOptions: MUIDataTableOptions = {
-        onRowClick: (rowData, rowMeta) => {
-            this.setPreviousClick(rowMeta.dataIndex);
-        },
+        onRowsSelect: ((currentRowsSelected, rowsSelected) => {
+            if(rowsSelected[0]) {
+                this.setSelectedItem(rowsSelected[0].dataIndex)
+            } else {
+                this.props.onManyRowsSelected();
+            }
+        }),
         selectableRows: 'single' || 'multiple',
-        selectableRowsOnClick: true
+        selectableRowsOnClick: true,
+        rowsSelected: this.selectedRows()
     };
 
     render() {

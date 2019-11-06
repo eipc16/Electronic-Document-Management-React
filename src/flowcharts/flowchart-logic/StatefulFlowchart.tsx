@@ -111,27 +111,6 @@ class StatefulFlowchart extends React.Component<ComponentProps, FlowChartState> 
       },)
     };
 
-    setPortResult = (nodeId: string, portId: string, newType: string) => {
-        // this.setState({
-        //     ...this.state,
-        //     nodes: {
-        //         ...this.state.nodes,
-        //         [nodeId]: {
-        //             ...this.state.nodes[nodeId],
-        //             ports: {
-        //                 ...this.state.nodes[nodeId].ports,
-        //                 [portId]: {
-        //                     ...this.state.nodes[nodeId].ports[portId],
-        //                     properties: {
-        //                         result: newType
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // })
-    };
-
     setCanvasPosition = (x: number, y: number) => {
         this.setState({
             ...this.state,
@@ -193,10 +172,10 @@ class StatefulFlowchart extends React.Component<ComponentProps, FlowChartState> 
                 CanvasOuter: CanvasOuterCustom,
                 Node: CustomNode,
                 Port: (props) => {
-                    return <CustomPort {...props} stateActions={this.stateActions} flowChartState={chart} changePort={this.setPortResult}/>
+                    return <CustomPort {...props} stateActions={this.stateActions} flowChartState={chart} />
                 },
                 Link: (props) => {
-                    return <CustomLink {...props} stateActions={this.stateActions} flowChartState={chart} scale={scale} changePort={this.setPortResult}/>
+                    return <CustomLink {...props} stateActions={this.stateActions} flowChartState={chart} scale={scale} />
                 }
             }}
             config={{
@@ -211,7 +190,6 @@ class StatefulFlowchart extends React.Component<ComponentProps, FlowChartState> 
             onCenterCanvas={this.setCanvasPosition}
             readOnly={this.props.readOnly ? this.props.readOnly : false}
           />
-          {/*<FlowChartCanvasData />*/}
         </div>
       )
     }
