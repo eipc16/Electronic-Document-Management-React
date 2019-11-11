@@ -5,7 +5,7 @@ import {
     PortIdentifier,
     SET_FLOW_CHART_CALLBACKS
 } from './../types/FlowChart';
-import {FlowChartDTO} from "../../flowcharts/mapper/FlowChartInterfaces";
+import {FlowChartDTO} from "../../modules/flowcharts/mapper/FlowChartInterfaces";
 
 export function updateFlowChart(data: FlowChartDTO): FlowChartActions {
     return {

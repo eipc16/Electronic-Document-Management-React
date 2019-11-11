@@ -4,8 +4,8 @@ import rootReducer from '../redux/reducers'
 import { createSelector } from 'reselect'
 import { useSelector, useDispatch } from 'react-redux'
 import { registerInputField, setCurrentForm } from '../redux/actions';
-import { FormProps, InputField } from '../wizards/Wizard';
-import {FlowChartDTO, FlowChartPort, FlowChartState} from "../flowcharts/mapper/FlowChartInterfaces";
+import { FormProps, InputField } from '../modules/wizards/WizardInterfaces';
+import {FlowChartDTO, FlowChartPort, FlowChartState} from "../modules/flowcharts/mapper/FlowChartInterfaces";
 import {setPortType} from "../redux/actions/FlowChart";
 
 interface PortCombinerArguments {

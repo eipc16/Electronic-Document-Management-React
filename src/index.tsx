@@ -6,68 +6,59 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 import Alert from 'react-s-alert';
-import defaultOptions from './notifications/Notification';
-
-import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
+import {getDefaultAlertOptions} from './notifications/Notification';
+import {Provider as PaperProvider} from 'react-native-paper';
 import {MuiPickersUtilsProvider} from '@material-ui/pickers';
-
 import {Provider as ReduxProvider} from 'react-redux';
-import {applyMiddleware, createStore, Reducer, StoreEnhancer} from 'redux';
-import {composeWithDevTools} from 'redux-devtools-extension'
-import createSagaMiddleware from 'redux-saga';
-import thunkMiddleware from 'redux-thunk'
-import rootReducer from './redux/reducers/'
-
 import {BrowserRouter as Router} from 'react-router-dom'
-
 import DateFnsUtils from '@date-io/date-fns';
 
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 
-const theme = {
-  ...DefaultTheme,
-  roundness: 2,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: '#3498db',
-    accent: '#f1c40f',
-  }
-};
+import {loadAppTheme} from "./configurations/themeConfiguration";
+import configureServices from "./configurations/serviceConfiguration";
+import {configureStore} from "./configurations/reduxConfiguration";
 
-const sagaMiddleware = createSagaMiddleware()
+import context from './context';
 
-function configureStore(reducer: Reducer) {
+import rootReducer from './redux/reducers';
+import { Store } from 'redux';
+import WizardProvider from "./modules/wizards/WizardProvider";
 
-    const middlewares = [thunkMiddleware, sagaMiddleware];
-    const middlewareEnhancer = applyMiddleware(...middlewares);
-
-    const enhancers = [middlewareEnhancer]
-    const composedEnhancers: StoreEnhancer = composeWithDevTools(...enhancers);
-
-    return createStore(reducer, undefined, composedEnhancers);
-}
-
-const store = configureStore(rootReducer);
-
-const Root = () => {
+const Root = (props: any) => {
     return (
         <Router>
-          <ReduxProvider store={store}>
-          <PaperProvider theme={theme}>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <App/>
-            </MuiPickersUtilsProvider>
-          </PaperProvider>
-          <Alert stack={{ limit: 3 }} {...defaultOptions} />
-          </ReduxProvider>
+            <ReduxProvider store={props.store}>
+                <WizardProvider>
+                    <PaperProvider theme={props.appTheme}>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <App/>
+                        </MuiPickersUtilsProvider>
+                    </PaperProvider>
+                </WizardProvider>
+                <Alert stack={{ limit: 3 }} {...props.alertOptions} />
+            </ReduxProvider>
         </Router>
     )
 };
 
-ReactDOM.render(<Root />, document.getElementById('root'));
+const render = async (store: Store) => {
+    const target = document.getElementById('root');
+    const theme = loadAppTheme();
+    const alertOptions = getDefaultAlertOptions();
+    ReactDOM.render(
+        <Root
+            store={store}
+            appTheme={theme}
+            alertOptions={alertOptions}
+        />, target);
+};
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+(async function init() {
+    const store = configureStore(rootReducer);
+    const services = await configureServices(store);
+    context.registerServices(services);
+    await render(store);
+    serviceWorker.register();
+})();

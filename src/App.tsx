@@ -3,16 +3,14 @@ import './App.scss';
 
 import { Route } from 'react-router-dom';
 
-import CustomSidebar from './sidebar/Sidebar';
-import { ActionBlocker } from './actionblocker/ActionBlocker'
+import CustomSidebar from './modules/sidebar/Sidebar';
+import { ActionBlocker } from './modules/actionblocker/ActionBlocker'
 import { sidebarElements } from './static/sidebar';
-import DocumentsListPage from './documents/DocumentsListPage';
-import { FlowChartPage } from './flowcharts/FlowChartsPage';
+import DocumentsListPage from './modules/documents/DocumentsListPage';
+import { FlowChartPage } from './modules/flowcharts/FlowChartsPage';
+import {WizardTest} from "./modules/wizards/WizardTest";
 
 const App: React.FC = (props: any) => {
-
-  console.log(props)
-
   return (
     <div className="App">
       <ActionBlocker />
@@ -20,6 +18,7 @@ const App: React.FC = (props: any) => {
       <div className="main-container">
         <Route exact path="/" component={DocumentsListPage} />
         <Route path="/flowcharts/:flowchartId?" component={FlowChartPage} />
+        <Route path="/form" component={WizardTest} />
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
-import { ValidatorError } from '../../wizards/validators/Validator'
+import { ValidatorError } from '../../modules/wizards/validators/Validator'
 
-import { SearchOption, SearchOptionGroup } from '../../wizards/inputs/SearchField'
+import { SearchOption, SearchOptionGroup } from '../../modules/wizards/inputs/SearchField'
 
 export const REGISTER_INPUT_FIELD = 'REGISTER_INPUT_FIELD'
 export const SET_FIELD_STATE = 'SET_FORM_FIELD_STATE'

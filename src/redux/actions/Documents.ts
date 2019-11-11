@@ -5,7 +5,7 @@ import {
     SET_LAST_SPLITTER_ACTION,
     SET_SELECTED_DOCUMENT
 } from "../types/Documents";
-import {ChangeSplitProportionsAction} from "../../documents/SplitterUtils";
+import {ChangeSplitProportionsAction} from "../../modules/documents/SplitterUtils";
 import {CommentEntity} from "simple-react-comments/dist/src/models";
 
 export function setSelectedDocument(id: number | null): DocumentsActions {

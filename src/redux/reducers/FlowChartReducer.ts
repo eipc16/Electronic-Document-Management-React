@@ -6,7 +6,7 @@ import {
     UPDATE_FLOW_CHART
 } from '../types/FlowChart';
 import {defaultFlowChart} from '../../static/flowchart';
-import {FlowChartDTO, FlowChartNode} from "../../flowcharts/mapper/FlowChartInterfaces";
+import {FlowChartDTO, FlowChartNode} from "../../modules/flowcharts/mapper/FlowChartInterfaces";
 
 const initialState: FlowChartDTO = defaultFlowChart;
 

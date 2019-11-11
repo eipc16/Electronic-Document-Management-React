@@ -1,4 +1,4 @@
-import {ChangeSplitProportionsAction} from "../../documents/SplitterUtils";
+import {ChangeSplitProportionsAction} from "../../modules/documents/SplitterUtils";
 import {CommentEntity} from "simple-react-comments/dist/src/models";
 
 export const SET_DOCUMENT_INFO_PAGE = 'SET_DOCUMENT_INFO_PAGE';

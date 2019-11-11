@@ -6,8 +6,8 @@ import {
     SET_LAST_SPLITTER_ACTION,
     SET_SELECTED_DOCUMENT
 } from "../types/Documents";
-import {DOCUMENT_DETAILS_PAGE} from "../../documents/details/DocumentInfo";
-import {SPLITTER_MAX_SECONDARY_ACTION} from "../../documents/SplitterUtils";
+import {DOCUMENT_DETAILS_PAGE} from "../../modules/documents/details/DocumentInfo";
+import {SPLITTER_MAX_SECONDARY_ACTION} from "../../modules/documents/SplitterUtils";
 
 const initialState: DocumentsState = {
     documentId: null,

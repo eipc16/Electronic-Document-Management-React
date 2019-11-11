@@ -1,0 +1,200 @@
+@import '../../App';
+$width-animation-delay: 550ms;
+$width-animation-type: ease-in;
+$color-animation-delay: 700ms;
+$color-animation-type: ease-in-out;
+.side-bar {
+    height: 100vh;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    width: 150px;
+    overflow: hidden;
+    @include transition( width $width-animation-delay $width-animation-type, background-color $color-animation-delay $color-animation-type);
+    &.default {
+        width: 75px;
+    }
+    &.extended {
+        width: 300px;
+        position: absolute;
+        display: block;
+        left: 0;
+        top: 0;
+        @include transition( width $width-animation-delay $width-animation-type, background-color $color-animation-delay $color-animation-type);
+    }
+    &.hidden {
+        width: 0;
+        overflow: hidden;
+    }
+}
+
+.sidebar-top-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99999;
+}
+
+.side-bar.default {
+    width: 75px;
+    background-color: red;
+}
+
+.action-blocker {
+    position: fixed;
+    left: 0px;
+    width: 0;
+    height: 100vh;
+    z-index: 99998;
+    background-color: lightgrey;
+    opacity: 0;
+    @include transition( opacity 0.4s 0.1s ease-in-out);
+    &.extended {
+        width: 100vw;
+        display: block;
+        opacity: 0.3
+    }
+}
+
+.elements_container {
+    height: 90%;
+    position: relative;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    box-sizing: content-box;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    padding: 5px 5px 5px 5px;
+}
+
+.side-bar_element {
+    border-radius: 3px;
+    width: 100%;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+}
+
+.action-icon {
+    border-radius: 10px;
+    position: relative;
+    &.default {
+        width: 48px;
+        height: 48px;
+    }
+    &.extended {
+        min-width: 72px;
+        min-height: 72px;
+    }
+}
+
+.action-title {
+    font-size: 1.25rem;
+    color: white;
+    text-transform: uppercase;
+    overflow-x: hidden;
+    font-family: 'Roboto', sans-serif;
+    @include transition(opacity 450ms $width-animation-delay ease-ou, width $width-animation-delay 0s ease-in);
+    &.default {
+        width: 0%;
+        opacity: 0;
+        text-align: right;
+    }
+    &.extended {
+        width: 100%;
+        opacity: 1;
+        text-align: left;
+        margin-left: 5px;
+        @include transition(opacity 450ms $width-animation-delay ease-in, width $width-animation-delay 0s ease-out);
+    }
+}
+
+.action-description {
+    position: absolute;
+    left: 100px;
+    z-index: 1000;
+    font-size: 2em;
+}
+
+.icon {
+    overflow: hidden;
+    float: right;
+    margin-left: 15px;
+    margin-right: 12px;
+}
+
+.mode_switch,
+.side-bar_element,
+.side-bar_selected {
+    cursor: pointer;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    display: flex;
+    position: relative;
+    align-items: center;
+    &.extended {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+    &::after {
+        content: '';
+        @include transition(width 250ms ease-out, height 350ms ease-out, opacity 550ms ease-in-out);
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 0px;
+        height: 0px;
+        opacity: 0;
+    }
+    &:hover {
+        &::after {
+            @include transition(width 250ms ease-out, height 355ms ease-out, opacity 550ms ease-in-out);
+            width: 100%;
+            opacity: 0.15;
+            height: 100%;
+            background-color: white;
+        }
+    }
+    &:focus {
+        &::after {
+            @include transition(opacity 0.4s ease-in);
+            opacity: 0.35;
+        }
+    }
+}
+
+.mode_switch {
+    position: absolute;
+    bottom: 0px;
+    height: 60px;
+}
+
+.text {
+    // @include transition(width $width-animation-delay 0s ease-in-out);
+    font-size: 1.2em;
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    color: white;
+}
+
+.text.extended {
+    @include transition(opacity 450ms $width-animation-delay ease-in, width $width-animation-delay 0s ease-out);
+    width: 72%;
+    opacity: 1;
+}
+
+.text.default {
+    @include transition(opacity 150ms 0s ease-out, width $width-animation-delay 0s ease-in-out);
+    z-index: -1;
+    opacity: 0;
+    width: 0px;
+}

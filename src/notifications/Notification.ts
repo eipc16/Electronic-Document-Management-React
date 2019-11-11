@@ -26,15 +26,15 @@ export enum AlertTypes {
   INFO
 }
 
-const defaultOptions = {
-  position: 'top-right',
-  effect: 'slide',
-  html: true,
-  alertType: AlertTypes.INFO,
-  timeout: 2000
+export const getDefaultAlertOptions = () => {
+  return {
+    position: 'top-right',
+    effect: 'slide',
+    html: true,
+    alertType: AlertTypes.INFO,
+    timeout: 2000
+  }
 };
-
-export default defaultOptions;
 
 export class AlertNotification {
   private readonly alertType: AlertTypes;
@@ -81,12 +81,21 @@ export class AlertNotification {
 }
 
 export class NotificationBuilder {
-  private alertType: AlertTypes = defaultOptions.alertType;
-  private position: string = defaultOptions.position;
-  private effect: string = defaultOptions.effect;
-  private allowHtml: boolean = defaultOptions.html;
-  private timeout: number = defaultOptions.timeout;
+  private alertType: AlertTypes;
+  private position: string;
+  private effect: string;
+  private allowHtml: boolean;
+  private timeout: number;
   private message = '';
+
+  constructor() {
+    const defaultOptions = getDefaultAlertOptions()
+    this.alertType = defaultOptions.alertType;
+    this.position = defaultOptions.position;
+    this.effect = defaultOptions.effect;
+    this.allowHtml = defaultOptions.html;
+    this.timeout = defaultOptions.timeout;
+  }
 
   setMessage(message: string) {
     this.message = message;

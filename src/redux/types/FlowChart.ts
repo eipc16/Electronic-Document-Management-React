@@ -1,4 +1,4 @@
-import {FlowChartDTO, FlowChartPort} from "../../flowcharts/mapper/FlowChartInterfaces";
+import {FlowChartDTO, FlowChartPort} from "../../modules/flowcharts/mapper/FlowChartInterfaces";
 
 export const UPDATE_FLOW_CHART = 'UPDATE_FLOW_CHART';
 export const SET_PORT_TYPE = 'SET_PORT_TYPE';

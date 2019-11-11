@@ -9,8 +9,8 @@ import {
     REGISTER_INPUT_FIELD,
 } from '../types'
 
-import { ValidatorError } from '../../wizards/validators/Validator'
-import { SearchOption } from '../../wizards/inputs'
+import { ValidatorError } from '../../modules/wizards/validators/Validator'
+import { SearchOption } from '../../modules/wizards/inputs'
 
 export function setFieldState(fieldUuid: string, state: InputFieldState): InputFieldTypes {
     return {
