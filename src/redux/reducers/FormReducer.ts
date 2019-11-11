@@ -1,6 +1,14 @@
-import React from 'react'
 import { FormState, FormActions, InputFieldsState } from '../types'
-import {HIDE_FORM, REGISTER_FORM, SEND_FORM, SHOW_FORM} from "../types/Form";
+import {
+    FETCH_WIZARD_COMPLETED,
+    FETCH_WIZARD_STARTED,
+    FetchState,
+    HIDE_FORM,
+    REGISTER_FORM,
+    SEND_FORM,
+    SHOW_FORM
+} from "../types/Form";
+import {services} from "../../context";
 
 const initialState: FormState = {
     uuid: '',
@@ -8,23 +16,6 @@ const initialState: FormState = {
     endpoint: '',
     visible: false,
     fields: []
-};
-
-const sendForm = (state: FormState, inputFields: InputFieldsState) => {
-    let payload = {
-        form: state.uuid
-    };
-
-    Object.keys(inputFields).forEach(entry => {
-        const field = inputFields[entry];
-        
-        if(field.formUuid === state.uuid) {
-            payload = {
-                ...payload,
-                [field.name]: field.value
-            }
-        }
-    })
 };
 
 export default function formReducer(state = initialState, action: FormActions, inputFields: InputFieldsState) {
@@ -39,18 +30,21 @@ export default function formReducer(state = initialState, action: FormActions, i
                 fields: action.formData.fields
             };
         case SHOW_FORM:
-            return {
-                ...state,
-                visible: state.uuid === action.formUuid ? true : state.visible
-            };
+            return {...state, visible: true};
         case HIDE_FORM:
+            return {...state, visible: false};
+        case SEND_FORM:
+            return services.wizardService.sendForm(state, action.formUuid, inputFields);
+        case FETCH_WIZARD_STARTED:
             return {
                 ...state,
-                visible: state.uuid === action.formUuid ? false : state.visible
+                fetchStatus: FetchState.ONGOING
             };
-        case SEND_FORM:
-            sendForm(state, inputFields);
-            return state
+        case FETCH_WIZARD_COMPLETED:
+            return {
+                ...action.payload,
+                fetchStatus: action.fetchState
+            }
     }
 
     return state

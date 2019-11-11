@@ -1,5 +1,3 @@
-import React from 'react'
-
 import styled from "styled-components";
 
 export const StartNode = styled.div`
@@ -9,4 +7,4 @@ export const StartNode = styled.div`
   background: #3e3e3e;
   color: white;
   border-radius: 10px;
-`
+`;

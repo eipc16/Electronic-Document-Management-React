@@ -1,5 +1,3 @@
-import React from 'react'
-
 import './Nodes.scss';
 import styled from "styled-components";
 

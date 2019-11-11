@@ -58,7 +58,7 @@ export const CustomLink = (props: ILinkDefaultProps & LinkCustomProps) => {
         return null;
     }
 
-    if(portFrom && portFrom.type !== 'output' || (portTo && portTo.type !== 'input')) {
+    if((portFrom && portFrom.type !== 'output') || (portTo && portTo.type !== 'input')) {
         return null;
     }
 

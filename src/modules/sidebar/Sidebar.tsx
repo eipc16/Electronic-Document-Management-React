@@ -147,20 +147,18 @@ class CustomSidebar extends React.Component<ComponentProps, SidebarState> {
     };
 
     return (
-      <div>
         <div className="sidebar-top-container">
           <div className={`${this.props.className} ${visibility}`} style={sidebarStyle}>
-          <div className="elements_container">{this.getElementsFromProps()}</div>
-          <div
-            className={`mode_switch ${visibility}`}
-            onClick={() => this.toggleVisibilityMode()}
-          >
-            <span className={`text ${visibility}`}>{CustomSidebar.MODE_SWITCH_TITLE}</span>
-            <Icon className={`icon`} path={stateIcon} size={2} />
-          </div>
+            <div className="elements_container">{this.getElementsFromProps()}</div>
+            <div
+                className={`mode_switch ${visibility}`}
+                onClick={() => this.toggleVisibilityMode()}
+            >
+              <span className={`text ${visibility}`}>{CustomSidebar.MODE_SWITCH_TITLE}</span>
+              <Icon className={`icon`} path={stateIcon} size={2} />
+            </div>
           </div>
         </div>
-      </div>
     );
   }
 }

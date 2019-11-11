@@ -1,33 +1,38 @@
 import React from 'react';
 
-import { Button } from 'react-native-paper';
+import {Button} from 'react-native-paper';
 
 import './Wizards.scss'
-import {FormProps, FormType, InputField} from "./WizardInterfaces";
-import {getCorrectInputComponent} from "./WizardUtils";
+import {FormProps, FormType} from "./WizardInterfaces";
+import {services} from "../../context";
+import {ReduxStore} from "../../utils/ReduxUtils";
+import {connect} from "react-redux";
+import {FetchState} from "../../redux/types/Form";
+import LoadingIndicator from "../common/LoadingIndicator";
+import {ErrorPage} from "../common/ErrorPage";
 
 
-const FormComponent: React.FC<FormProps> = (form: FormProps) => {
+const FormComponent: React.FC<FormProps & any> = (props: FormProps & any) => {
+    const {title, formType, children, uuid} = props;
 
-    const handleSubmitF = () => {
+    const handleSubmit = () => {
+        services.wizardService.submitForm(uuid);
     };
 
     const handleDecline = () => {
-
+        services.wizardService.closeForm(uuid);
     };
 
-    const inputList = form.fields.map((field: InputField) => {
-        return getCorrectInputComponent(field);
-    });
+    const type = formType ? formType.valueOf() : FormType.NORMAL;
 
-    const formType = form.formType ? form.formType.valueOf() : FormType.NORMAL;
-    
     return (
-        <form className={`form-container ${formType}`}>
-            <p className='form-title'>{form.title}</p>
-            <form className={'form-body'}>
-                {inputList}
-            </form>
+        <form className={`form-container ${type}`}>
+            <p className='form-title'>{title}</p>
+            <div className={'form-body'}>
+                { props.fetchState && FetchState.COMPLETED === props.fetchState && children }
+                { (!props.fetchState || FetchState.ONGOING === props.fetchState) && <LoadingIndicator /> }
+                { props.fetchState && FetchState.ERROR === props.fetchState && <ErrorPage />}
+            </div>
             <div className='form-btn-container'>
                 <div className='btn cancel'>
                     <Button
@@ -40,7 +45,7 @@ const FormComponent: React.FC<FormProps> = (form: FormProps) => {
                 <div className='btn cancel'>
                 <Button
                     mode="outlined" 
-                    onPress={() => handleSubmitF()}>
+                    onPress={() => handleSubmit()}>
                     {'SUBMIT'}
                 </Button>
                 </div>
@@ -49,14 +54,11 @@ const FormComponent: React.FC<FormProps> = (form: FormProps) => {
     )
 };
 
-export const getForm = (title: string, uuid: string, fields: InputField[], endpoint: string, formType?: FormType) => {
-    return (
-        <FormComponent
-            title={title}
-            uuid={uuid}
-            fields={fields}
-            formType={formType}
-            endpoint={endpoint}
-        />
-    )
+export const mapStateToProps = (store: ReduxStore, ownProps: any) => {
+    return {
+        fetchState: store.form.fetchStatus,
+        ...ownProps
+    }
 };
+
+export default connect(mapStateToProps, null)(FormComponent);

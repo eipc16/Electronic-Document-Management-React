@@ -13,3 +13,7 @@ export const BlueSwitch = withStyles({
     checked: {},
     track: {},
 })(Switch);
+
+export const defaultFieldStyle = {
+    "backgroundColor": "transparent"
+};

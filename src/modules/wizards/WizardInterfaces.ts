@@ -1,4 +1,6 @@
-import {SearchOption, SearchOptionGroup} from "./inputs/SearchField";
+import {SearchOption, SearchOptionGroup} from "./inputs/FieldInterfaces";
+import {FieldType} from "../../redux/types/InputField";
+import {ValidatorError} from "./validators/Validator";
 
 export enum FormType {
     POPUP = "popup",
@@ -8,13 +10,17 @@ export enum FormType {
 export interface InputField {
     uuid: string;
     formUuid: string;
+    controllerUrl: string | null;
     type: string;
-    defaultValue: string | number | boolean | Date | File | SearchOption;
+    defaultValue: FieldType;
     isRequired: boolean;
+    isVisible: boolean;
     label: string;
     name: string;
     placeholder: string | null;
     validators: string[];
+    errors: ValidatorError[];
+    optionsUrl?: string;
     options?: SearchOptionGroup[] | SearchOption[];
 }
 

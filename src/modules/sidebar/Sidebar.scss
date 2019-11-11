@@ -32,28 +32,12 @@ $color-animation-type: ease-in-out;
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 99999;
+    z-index: 10;
 }
 
 .side-bar.default {
     width: 75px;
     background-color: red;
-}
-
-.action-blocker {
-    position: fixed;
-    left: 0px;
-    width: 0;
-    height: 100vh;
-    z-index: 99998;
-    background-color: lightgrey;
-    opacity: 0;
-    @include transition( opacity 0.4s 0.1s ease-in-out);
-    &.extended {
-        width: 100vw;
-        display: block;
-        opacity: 0.3
-    }
 }
 
 .elements_container {
@@ -117,7 +101,6 @@ $color-animation-type: ease-in-out;
 .action-description {
     position: absolute;
     left: 100px;
-    z-index: 1000;
     font-size: 2em;
 }
 

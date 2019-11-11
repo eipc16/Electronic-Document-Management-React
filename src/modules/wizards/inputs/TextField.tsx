@@ -1,52 +1,42 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux'
+import {connect} from 'react-redux'
 
-import './InputFields.scss';
+import './styles/InputFields.scss';
 import { HelperText, TextInput } from 'react-native-paper';
 
 
 import Icon from '@mdi/react';
 import { mdiEyeOutline, mdiEyeOffOutline } from '@mdi/js';
-import {ExtendedTextFieldProps, InputStyle, InputType, TextFieldProps} from "./FieldInterfaces";
-import {useFieldStateByUUid, useRegisterField} from "../../../utils/ReduxUtils";
+import {InputType, TextFieldProps} from "./FieldInterfaces";
+import {ReduxStore} from "../../../utils/ReduxUtils";
 import {InputFieldState} from "../../../redux/types/InputField";
-import {setFieldValidationResults, setFieldValue} from "../../../redux/actions/InputField";
+import {defaultFieldStyle} from "./styles/FieldUtils";
+import {services} from "../../../context";
 
-const defaultFieldStyle = {
-  "backgroundColor": "transparent"
-}
+type ComponentProps = TextFieldProps & { fieldData?: InputFieldState };
 
-const TextField: React.FC<TextFieldProps> = props => {
-  const dispatch = useDispatch()
-  const [hideText, setHideText] = useState(true);
+const TextField: React.FC<ComponentProps> = (props: ComponentProps) => {
+    const [hideText, setHideText] = useState(true);
 
-  useRegisterField({
-      uuid: props.uuid,
-      formUuid: props.formUuid,
-      type: props.inputType.valueOf(),
-      name: props.name,
-      label: props.label,
-      value: props.defaultText ? props.defaultText : '',
-      isValid: true,
-      errors: []
-  });
-
-  const fieldState: InputFieldState = useFieldStateByUUid(props.uuid);
-
-  if(!fieldState) {
-    return null
-  }
-
-  const {uuid, errors, isValid, label, value, name} = fieldState;
-
-  const setContentAndErrors = (value: string) => {
-    dispatch(setFieldValue(uuid, value));
-    
-    if(props.validator) {
-      const validatorList = props.validator.test(value);
-      dispatch(setFieldValidationResults(uuid, validatorList))
+    if(!props.fieldData) {
+        return null;
     }
-  };
+
+    const { uuid, label, value, name, errors, isVisible, isRequired } = props.fieldData;
+    const isValid = errors.length === 0;
+
+    const setContentAndErrors = (value: string) => {
+        services.wizardService.updateFieldValue(uuid, value);
+
+        if(props.onUpdate) {
+            props.onUpdate(value);
+        }
+
+        if(props.validator) {
+          const validatorList = props.validator.test(value);
+          // dispatch(setFieldValidationResults(uuid, validatorList))
+        }
+    };
 
   const secureText = () => {
     return props.inputType === InputType.PASSWORD && hideText
@@ -60,57 +50,50 @@ const TextField: React.FC<TextFieldProps> = props => {
     });
   }
 
-  return (
-    <div className="input-container" key={name}>
-      <div className="input-container-inner">
-        <TextInput
-          label={label + (props.required ? " *" : '')}
-          key={uuid}
-          value={(value != null) ? value.toString() : ''}
-          error={!isValid}
-          mode={props.type}
-          keyboardType={props.inputType === InputType.PASSWORD ? 'default' : props.inputType}
-          onChangeText={(text: string) => setContentAndErrors(text)}
-          style={defaultFieldStyle}
-          secureTextEntry={secureText()}
-        />
-        { props.inputType === InputType.PASSWORD 
-          ? (
-              <label
-                className="checkbox-label"
-                htmlFor={`checkbox_${uuid}`}>
-                  <input type="checkbox"
-                    id={`checkbox_${uuid}`}
-                    checked={hideText} 
-                    onChange={() => setHideText(!hideText)} 
-                    style={{'display': 'none'}}
-                  />
-                  <Icon className="password-checkbox" path={hideText ? mdiEyeOutline : mdiEyeOffOutline } size={1} />
-              </label>
-          ): null
-        }
-      </div>
-      <HelperText type="error" visible={!isValid}>
-        {errorMessages}
-      </HelperText>
-    </div>
-  );
+    const className = `input-container input-field ${!isVisible ? 'hidden' : ''}`;
+
+      return (
+        <div className={className} key={name}>
+          <div className="input-container-inner">
+            <TextInput
+              label={label + (isRequired ? " *" : '')}
+              key={uuid}
+              value={(value != null) ? value.toString() : ''}
+              error={!isValid}
+              mode={props.type}
+              keyboardType={props.inputType === InputType.PASSWORD ? 'default' : props.inputType}
+              onChangeText={(text: string) => setContentAndErrors(text)}
+              style={defaultFieldStyle}
+              secureTextEntry={secureText()}
+            />
+            { props.inputType === InputType.PASSWORD
+              ? (
+                  <label
+                    className="checkbox-label"
+                    htmlFor={`checkbox_${uuid}`}>
+                      <input type="checkbox"
+                        id={`checkbox_${uuid}`}
+                        checked={hideText}
+                        onChange={() => setHideText(!hideText)}
+                        style={{'display': 'none'}}
+                      />
+                      <Icon className="password-checkbox" path={hideText ? mdiEyeOutline : mdiEyeOffOutline } size={1} />
+                  </label>
+              ): null
+            }
+          </div>
+          <HelperText type="error" visible={!isValid}>
+            {errorMessages}
+          </HelperText>
+        </div>
+      );
 };
 
-export const getInputFieldComponent = (props: ExtendedTextFieldProps) => {
-  return (
-    <TextField 
-      key={props.uuid}
-      validator={props.validator}
-      label={props.label}
-      uuid={props.uuid}
-      name={props.name}
-      formUuid={props.formUuid ? props.formUuid : ''}
-      type={props.type ? props.type : InputStyle.FLAT}
-      inputType={props.inputType ? props.inputType : InputType.TEXT}
-      defaultText={props.defaultText}
-      required={props.required ? props.required : false}
-      placeholder={props.placeholder ? props.placeholder : ''}
-      />
-  )
-}
+const mapStateToProps = (store: ReduxStore, ownProps: TextFieldProps) => {
+    return {
+        fieldData: store.inputFields[ownProps.uuid],
+        ...ownProps
+    }
+};
+
+export default connect(mapStateToProps, null)(TextField);

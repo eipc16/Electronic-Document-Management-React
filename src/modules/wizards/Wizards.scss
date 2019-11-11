@@ -16,8 +16,9 @@
         max-width: 25vw;
         position: absolute;
         left: 0;
+        top: 0;
+        bottom: 0;
         right: 0;
-        top: 5vh;
         margin: auto;
         z-index: 10;
         border: 1px grey solid;
@@ -37,10 +38,6 @@
     padding-bottom: 15px;
     display: flex;
     justify-content: center;
-    //position: absolute;
-    //bottom: 5px;
-    //left: 50%;
-    //transform: translateX(-50%);
 }
 
 .form-body {
@@ -49,19 +46,12 @@
     padding-left: 50px;
     padding-right: 50px;
     justify-content: center;
+    align-items: center;
 }
 
 .btn {
     margin-left: 15px;
     margin-right: 15px;
-    // border: 2px grey solid;
-    // border-radius: 2px;
-    // &.cancel {
-    //     background-color: firebrick;
-    // }
-    // &.submit {
-    //     background-color: royalblue;
-    // }
 }
 
 ::-webkit-scrollbar {

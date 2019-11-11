@@ -1,5 +1,3 @@
-import Alert from 'react-s-alert';
-
 import {NotificationBuilder, AlertTypes} from '../notifications/Notification'
 
 import {

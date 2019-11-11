@@ -1,4 +1,5 @@
 import {Validator} from "../validators/Validator";
+import {FieldType} from "../../../redux/types/InputField";
 
 export enum InputStyle {
     FLAT = "flat",
@@ -24,6 +25,19 @@ interface FieldProps {
     formUuid: string;
     name: string;
     required: boolean;
+    onUpdate?: (data: FieldType) => void;
+}
+
+export interface SearchFieldProps extends FieldProps {
+    type: string;
+    defaultValue: SearchOption | null;
+    optionsUrl?: string;
+}
+
+export interface DateTimeProps extends FieldProps {
+    type: DateTimeType;
+    defaultValue: string;
+    validator?: Validator;
 }
 
 export interface SelectorFieldProps extends FieldProps {
@@ -50,4 +64,31 @@ export interface ExtendedTextFieldProps {
     inputType?: InputType;
     placeholder?: string | null;
     required?: boolean;
+}
+
+export enum DateTimeType {
+    DATE = "date",
+    TIME = "time",
+    DATE_AND_TIME = "datetime-local"
+}
+
+export interface SelectorProps {
+    label: string;
+    uuid: string;
+    name: string;
+    formUuid?: string;
+    type?: DateTimeType;
+    defaultValue?: Date;
+    validator?: Validator;
+    required?: boolean;
+}
+
+export interface SearchOption {
+    label: string;
+    value: string;
+}
+
+export interface SearchOptionGroup {
+    label: string;
+    options: SearchOption[];
 }

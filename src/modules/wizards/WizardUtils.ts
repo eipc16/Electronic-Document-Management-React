@@ -1,11 +1,9 @@
 import {dateIsAfterToday, hasLengthGreaterThan10, noUpperCase} from "./validators/ValidatorRules";
 import {Validator} from "./validators/Validator";
 import {InputField} from "./WizardInterfaces";
-import {getSearchBoxComponent, SearchOption} from "./inputs/SearchField";
-import {getInputFieldComponent} from "./inputs/TextField";
-import {getDateTimeComponent, DateTimeType} from "./inputs/DateTimeField";
-import {InputType, SelectorType} from "./inputs/FieldInterfaces";
-import {getSelectorField} from "./inputs/SelectorField";
+import {DateTimeType, InputType, SearchOption, SelectorType} from "./inputs/FieldInterfaces";
+import {getDateTimeComponent, getInputFieldComponent, getSearchBoxComponent, getSelectorField} from "./inputs/index";
+import {FieldType} from "../../redux/types/InputField";
 
 export function getValidatorFunctionFromString(validation: string) {
     switch(validation) {
@@ -21,36 +19,35 @@ export function getValidatorFunctionFromString(validation: string) {
 }
 
 export function getValidator(validations: string[]) {
-    const validator = new Validator([])
+    const validator = new Validator([]);
+    if(validations) {
+        validations.forEach(validation => {
+            const validationFunction = getValidatorFunctionFromString(validation);
 
-    validations.forEach(validation => {
-        const validationFunction = getValidatorFunctionFromString(validation)
-
-        if(validationFunction != undefined) {
-            validator.addRule(validationFunction)
-        }
-    })
-
+            if(validationFunction !== undefined) {
+                validator.addRule(validationFunction)
+            }
+        });
+    }
     return validator
 }
 
-export function getTextInput(data: InputField) {
-    const IndexedInputType: { [idx: string]: InputType } = InputType
-
+export function getTextInput(data: InputField, onUpdate?: (data: FieldType) => void) {
+    const IndexedInputType: { [idx: string]: InputType } = InputType;
     return getInputFieldComponent({
         label: data.label,
         uuid: data.uuid,
         formUuid: data.formUuid,
-        defaultText: data.defaultValue.toString(),
+        defaultText: data.defaultValue ? data.defaultValue.toString() : undefined,
         name: data.name,
         validator: getValidator(data.validators),
         inputType: IndexedInputType[data.type],
         placeholder: data.placeholder,
         required: data.isRequired,
-    })
+    }, onUpdate)
 }
 
-export function getDateInput(data: InputField) {
+export function getDateInput(data: InputField, onUpdate?: (data: FieldType) => void) {
     const IndexedSelectorType: { [idx: string]: DateTimeType } = DateTimeType;
     const defaultDate = data.defaultValue as Date
 
@@ -63,10 +60,10 @@ export function getDateInput(data: InputField) {
         defaultValue: defaultDate,
         validator: getValidator(data.validators),
         required: data.isRequired,
-    })
+    }, onUpdate)
 }
 
-export function getSearchInput(data: InputField) {
+export function getSearchInput(data: InputField, onUpdate?: (data: FieldType) => void) {
     const searchBoxValue = data.defaultValue as SearchOption;
 
     let options = data.options;
@@ -83,13 +80,12 @@ export function getSearchInput(data: InputField) {
         formUuid: data.formUuid,
         type: 'selector',
         defaultValue: searchBoxValue,
-        validator: getValidator(data.validators),
         required: data.isRequired,
-        options: options
-    })
+        optionsUrl: data.optionsUrl
+    }, onUpdate)
 }
 
-export function getSelectorInput(data: InputField) {
+export function getSelectorInput(data: InputField, onUpdate?: (data: FieldType) => void) {
     let defaultValue = false;
 
     if(data.defaultValue instanceof Boolean) {
@@ -107,8 +103,8 @@ export function getSelectorInput(data: InputField) {
         formUuid: data.formUuid,
         type: type,
         name: data.name,
-        required: data.isRequired
-    })
+        required: data.isRequired,
+    }, onUpdate)
 }
 
 function isADateTime(type: string) {
@@ -127,18 +123,18 @@ function isASearchBox(type: string) {
     return type === 'searchbox';
 }
 
-export function getCorrectInputComponent(data: InputField) {
+export function getCorrectInputComponent(data: InputField, onUpdate?: (data: FieldType) => void) {
     const type = data.type;
     let result = null;
 
     if(isADateTime(type)) {
-        result = getDateInput(data)
+        result = getDateInput(data, onUpdate)
     } else if(isAnInputType(type)) {
-        result = getTextInput(data)
+        result = getTextInput(data, onUpdate)
     } else if(isASelectorType(type)) {
-        result = getSelectorInput(data)
+        result = getSelectorInput(data, onUpdate)
     } else if (isASearchBox(type)) {
-        result = getSearchInput(data)
+        result = getSearchInput(data, onUpdate)
     }
     return result
 }

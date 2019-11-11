@@ -1,104 +1,76 @@
 import React, { useState } from 'react'
-import Select from 'react-select';
-import { useDispatch } from 'react-redux'
+import AsyncSelect from 'react-select/async';
+import {connect} from 'react-redux'
 
-import {setFieldValue} from '../../../redux/actions/index'
 import { InputFieldState } from '../../../redux/types/index';
 
-import './InputFields.scss';
-import { Validator } from '../validators/Validator';
-import {useFieldStateByUUid, useRegisterField} from "../../../utils/ReduxUtils";
+import './styles/InputFields.scss';
+import { ReduxStore } from "../../../utils/ReduxUtils";
+import {SearchFieldProps, SearchOption, SearchOptionGroup} from "./FieldInterfaces";
+import {services} from "../../../context";
 
-export interface SearchOption {
-    label: string;
-    value: string;
-}
+type ComponentProps = SearchFieldProps & { fieldData?: InputFieldState }
 
-export interface SearchOptionGroup {
-  label: string;
-  options: SearchOption[];
-}
+const DropdownSearchField: React.FC<ComponentProps> = (props: ComponentProps) => {
+    const [labelClass, setLabelClass] = useState('field-label');
 
-interface SearchFieldProps {
-    label: string;
-    uuid: string;
-    formUuid: string;
-    name: string;
-    validator: Validator | undefined;
-    type: string;
-    defaultValue: SearchOption | null;
-    required: boolean;
-    options: SearchOptionGroup[] | SearchOption[];
-  }
-
-const DropdownSearchField: React.FC<SearchFieldProps> = props => {
-  const dispatch = useDispatch()
-  const [labelClass, setLabelClass] = useState('field-label');
-
-  const getOptionsValue = () => {
-      if(props.options instanceof String) {
-          return [];
-      } else {
-          return props.options;
-      }
+    if(!props.fieldData) {
+        return null;
     }
 
-  useRegisterField({
-        uuid: props.uuid,
-        formUuid: props.formUuid,
-        name: props.name,
-        type: props.type,
-        label: props.label,
-        value: props.defaultValue,
-        isValid: true,
-        errors: [],
-        options: getOptionsValue()
-  });
+    const { uuid, label, value, name, options, controllerUrl, formUuid, isVisible, isRequired, optionsUrl } = props.fieldData;
 
-  const setSelected = (selected: SearchOption) => {
-      dispatch(setFieldValue(uuid, selected))
-  };
+    const setSelected = (selected: SearchOption) => {
+        if(props.onUpdate) {
+            props.onUpdate(selected);
+        }
 
-  const fieldState: InputFieldState = useFieldStateByUUid(props.uuid);
-  
-  if(!fieldState) {
-    return null
-  }
+        if(controllerUrl) {
+            services.wizardService.updateFieldValue(uuid, selected, formUuid);
+        } else {
+            services.wizardService.updateFieldValue(uuid, selected);
+        }
+    };
 
-  const {uuid, label, value, options, name} = fieldState;
+    const inputChangeHandler = (searchText: string) =>
+        new Promise(resolve => {
+            if(optionsUrl) {
+                resolve(
+                    services.wizardService.fetchSearchBoxOptionsStateless(optionsUrl, searchText)
+                );
+            }
+        });
 
-  return (
-        <div className="input-container dropdown-search" key={name}>
-          <label htmlFor="search-box" className={labelClass}>{label}</label>
-          <Select
-            label={label}
-            name='search-box'
-            value={value as SearchOption}
-            onMenuOpen={() => setLabelClass('field-label selected')}
-            onMenuClose={() => setLabelClass('field-label')}
-            onChange={(e) => setSelected(e as SearchOption)}
-            options={options}
-            styles={{
-                menuList: provided => ({ ...provided, textAlign: 'left', maxHeight: '30vh', overflowY: 'scroll'})
-            }}
-          />
+    const className=`input-container dropdown-search ${!isVisible ? 'hidden' : ''}`;
+
+    return (
+        <div className={className} key={name}>
+            <label htmlFor="search-box" className={labelClass}>{label}</label>
+            <AsyncSelect
+                label={label + isRequired ? " *" : ""}
+                name='search-box'
+                cacheOptions={true}
+                loadOptions={inputChangeHandler}
+                defaultOptions={true}
+                value={value as SearchOption}
+                onMenuOpen={() => setLabelClass('field-label selected')}
+                onMenuClose={() => setLabelClass('field-label')}
+                onChange={(e) => setSelected(e as SearchOption)}
+                // onInputChange={inputChangeHandler}
+                options={options}
+                styles={{
+                    menuList: provided => ({ ...provided, textAlign: 'left', maxHeight: '30vh', overflowY: 'scroll'})
+                }}
+            />
         </div>
-  )
+    )
 };
 
-export const getSearchBoxComponent = (props: SearchFieldProps) => {
-  return (
-    <DropdownSearchField 
-        key={props.uuid}
-        uuid={props.uuid}
-        formUuid={props.formUuid}
-        name={props.name}
-        type={props.type}
-        label={props.label}
-        defaultValue={props.defaultValue}
-        options={props.options}
-        required={props.required}
-        validator={props.validator}
-    />
-  )
-}
+const mapStateToProps = (store: ReduxStore, ownProps: SearchFieldProps) => {
+    return {
+        fieldData: store.inputFields[ownProps.uuid],
+        ...ownProps
+    }
+};
+
+export default connect(mapStateToProps, null)(DropdownSearchField);

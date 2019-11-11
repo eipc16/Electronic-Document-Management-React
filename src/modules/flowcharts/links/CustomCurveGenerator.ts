@@ -1,5 +1,4 @@
 import {IPosition} from "@mrblenny/react-flow-chart/src";
-import {FlowChartNode} from "../mapper/FlowChartInterfaces";
 
 const generateNormalPath = (startPos: IPosition, endPos: IPosition, vertical_offset: number, horizontal_offset: number) => {
     const leftToRight = startPos.x < endPos.x;

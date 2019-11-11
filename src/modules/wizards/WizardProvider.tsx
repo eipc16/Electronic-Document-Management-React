@@ -1,23 +1,32 @@
 import React from 'react';
-import {ReduxFormComponent} from "./Wizard";
-import {FormType} from "./WizardInterfaces";
+import {FormType, InputField} from "./WizardInterfaces";
 import {connect} from "react-redux";
 import {ReduxStore} from "../../utils/ReduxUtils";
+import {InputFieldsState} from "../../redux/types/InputField";
+import {FormState} from "react-form";
+import {getCorrectInputComponent} from "./WizardUtils";
+import FormComponent from './Wizard';
 
-const WizardProvider = (props: any) => {
+interface StateProps {
+    form: FormState;
+    inputFields: InputFieldsState;
+}
+
+const WizardProvider: React.FC<StateProps & any> = (props: StateProps & any) => {
 
     const { inputFields, form } = props;
+    const inputFieldComponents = Object.keys(inputFields)
+        .map(key => inputFields[key])
+        .filter(inputField => inputField.formUuid === form.uuid)
+        .map((value: InputField) => getCorrectInputComponent(value));
 
     return <div className='wizard-provider'>
         {props.children}
         { form.visible ? (
-            <ReduxFormComponent
-                uuid={form.uuid}
-                title={form.title}
-                endpoint={form.endpoint}
-                formType={FormType.POPUP}
-                fields={form.fields}
-            />
+            <FormComponent uuid={form.uuid} title={form.title} endpoint={form.endpoint}
+                formType={FormType.POPUP} fields={form.fields}>
+                {inputFieldComponents}
+            </FormComponent>
         ) : null}
     </div>
 };
@@ -28,6 +37,6 @@ const mapStateToProps = (store: ReduxStore, ownProps: any) => {
         inputFields: store.inputFields,
         ...ownProps
     }
-}
+};
 
 export default connect(mapStateToProps, null)(WizardProvider);

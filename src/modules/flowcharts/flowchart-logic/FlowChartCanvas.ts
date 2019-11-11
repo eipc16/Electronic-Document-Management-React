@@ -1,5 +1,3 @@
-import React from 'react';
-
 import styled from "styled-components";
 import {ICanvasOuterDefaultProps} from "@mrblenny/react-flow-chart/src";
 

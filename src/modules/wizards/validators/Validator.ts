@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { ValidatorRule } from './ValidatorRules';
 
 export interface ValidatorError {

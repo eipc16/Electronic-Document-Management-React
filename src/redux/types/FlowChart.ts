@@ -1,10 +1,12 @@
-import {FlowChartDTO, FlowChartPort} from "../../modules/flowcharts/mapper/FlowChartInterfaces";
+import {FlowChartDTO} from "../../modules/flowcharts/mapper/FlowChartInterfaces";
 
 export const UPDATE_FLOW_CHART = 'UPDATE_FLOW_CHART';
 export const SET_PORT_TYPE = 'SET_PORT_TYPE';
 export const SET_FLOW_CHART_CALLBACKS = 'SET_FLOW_CHART_CALLBACKS';
 
 export const FETCH_FLOWCHART = 'FETCH_FLOWCHART';
+export const FETCH_FLOWCHART_BEGIN = 'FETCH_FLOWCHART_BEGIN';
+export const FETCH_FLOWCHART_END = 'FETCH_FLOWCHART_END';
 
 export interface PortIdentifier {
     nodeId?: string;

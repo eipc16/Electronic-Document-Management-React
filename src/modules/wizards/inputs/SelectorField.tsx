@@ -1,43 +1,35 @@
-import React, { useState } from 'react'
-import {FormControlLabel, Switch} from "@material-ui/core";
+import React from 'react'
+import {Switch} from "@material-ui/core";
+import {connect} from "react-redux";
+
 import {SelectorFieldProps, SelectorType} from "./FieldInterfaces";
-import {useFieldStateByUUid, useRegisterField} from "../../../utils/ReduxUtils";
-import {useDispatch} from "react-redux";
+import {ReduxStore} from "../../../utils/ReduxUtils";
 import {InputFieldState} from "../../../redux/types/InputField";
-import {SearchOption} from "./SearchField";
-import {setFieldValue} from "../../../redux/actions/InputField";
+import {services} from "../../../context";
 
-const SwitchComponent: React.FC<SelectorFieldProps> = (props: SelectorFieldProps) => {
-    const dispatch = useDispatch();
-    const { name, defaultValue, uuid, required, label, formUuid, type } = props;
+type ComponentProps = SelectorFieldProps & { fieldData?: InputFieldState }
 
-    useRegisterField({
-        uuid: uuid,
-        formUuid: formUuid,
-        name: name,
-        type: type,
-        label: label,
-        value: defaultValue,
-        isValid: true,
-        errors: []
-    });
-
-    const updateFieldState = (e: React.ChangeEvent, selected: boolean) => {
-        dispatch(setFieldValue(uuid, selected))
-    };
-
-    const fieldState: InputFieldState = useFieldStateByUUid(uuid);
-
-    if(!fieldState) {
-        return null
+const SwitchComponent: React.FC<ComponentProps> = (props: ComponentProps) => {
+    if(!props.fieldData) {
+        return null;
     }
 
-    const { value } = fieldState;
+    const { uuid, label, value, isRequired, isVisible } = props.fieldData;
     const selected = value as boolean;
 
+    const updateFieldState = (e: React.ChangeEvent, selected: boolean) => {
+        if(props.onUpdate) {
+            props.onUpdate(selected);
+        }
+
+        services.wizardService.updateFieldValue(uuid, selected);
+    };
+
+    const className = `input-container switch-selector ${!isVisible ? 'hidden' : ''}`;
+
     return (
-        <div className='input-container switch-selector'>
-            <label htmlFor={`selector_${uuid}`}>{label + (required ? " *" : '')}</label>
+        <div className={className}>
+            <label htmlFor={`selector_${uuid}`}>{label + (isRequired ? " *" : '')}</label>
             <Switch name={`selector_${uuid}`} checked={selected} onChange={updateFieldState}/>
         </div>
     )
@@ -65,14 +57,11 @@ const SelectorField: React.FC<SelectorFieldProps> = (props: SelectorFieldProps) 
     }
 };
 
-export function getSelectorField(props: SelectorFieldProps) {
-    return <SelectorField
-            type={props.type}
-            defaultValue={props.defaultValue}
-            uuid={props.uuid}
-            formUuid={props.formUuid}
-            name={props.name}
-            label={props.label}
-            required={props.required}
-        />
-}
+const mapStateToProps = (store: ReduxStore, ownProps: SelectorFieldProps) => {
+    return {
+        fieldData: store.inputFields[ownProps.uuid],
+        ...ownProps
+    }
+};
+
+export default connect(mapStateToProps, null)(SelectorField);

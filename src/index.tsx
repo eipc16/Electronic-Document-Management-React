@@ -25,19 +25,21 @@ import context from './context';
 import rootReducer from './redux/reducers';
 import { Store } from 'redux';
 import WizardProvider from "./modules/wizards/WizardProvider";
+import ActionBlocker from "./modules/actionblocker/ActionBlocker";
 
 const Root = (props: any) => {
     return (
         <Router>
             <ReduxProvider store={props.store}>
-                <WizardProvider>
-                    <PaperProvider theme={props.appTheme}>
+                <PaperProvider theme={props.appTheme}>
+                    <WizardProvider>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <App/>
                         </MuiPickersUtilsProvider>
-                    </PaperProvider>
-                </WizardProvider>
-                <Alert stack={{ limit: 3 }} {...props.alertOptions} />
+                    </WizardProvider>
+                    <Alert stack={{ limit: 3 }} {...props.alertOptions} />
+                    <ActionBlocker/>
+                </PaperProvider>
             </ReduxProvider>
         </Router>
     )

@@ -54,7 +54,8 @@ module.exports = {
     resolve: {
         alias: {
             'react-native$': require.resolve('react-native-web')
-        }
+        },
+        extensions: [".js", ".json", ".ts", ".tsx"]
     },
 
     // Development server config

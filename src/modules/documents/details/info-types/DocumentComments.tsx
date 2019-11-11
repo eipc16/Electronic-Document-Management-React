@@ -20,10 +20,6 @@ interface DispatchProps {
 export type DocumentCommentsProps = DocumentProps & StateProps & DispatchProps;
 
 class DocumentComments extends React.Component<DocumentCommentsProps> {
-    constructor(props: DocumentCommentsProps) {
-        super(props)
-    }
-
     render() {
         if(this.props.comments === null) {
             return false;

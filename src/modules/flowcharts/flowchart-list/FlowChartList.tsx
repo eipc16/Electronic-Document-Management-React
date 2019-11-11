@@ -1,62 +1,57 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import '../FlowCharts.scss'
-import { getInputFieldComponent } from '../../wizards/inputs';
 import { Button } from 'react-native-paper';
-import {InputStyle} from "../../wizards/inputs/FieldInterfaces";
-import {useFieldStateByUUid} from "../../../utils/ReduxUtils";
-
-const elements = [
-    "ONE",
-    "TWO",
-    "THREE",
-    "FOUR",
-    "FIVE",
-    "SIX",
-    "FOUR",
-    "FIVE",
-    "SIX",
-    "SEVEN",
-    "EIGHT",
-    "NINE",
-    "TEN",
-    "ELEVEN"
-]
+import {InputType} from "../../wizards/inputs/FieldInterfaces";
+import {ReduxStore, useFieldStateByUUid} from "../../../utils/ReduxUtils";
+import {services} from "../../../context";
+import FlowChartListElement, {FlowChartListEntry} from "./FlowChartListEntry";
+import {FieldType} from "../../../redux/types/InputField";
 
 export const FlowChartList: React.FC = (props: any) => {
+    const UUID = 'flowchart-list-filter-textbox';
+    const [listItems, setListItems] = useState<FlowChartListEntry[]>([]);
+    const [searchBox, setSearchBox] = useState(null);
+    const [mounted, setMouned] = useState(false);
 
-    const UUID = 'flowchart-list-filter-textbox'
+    const updateList = (searchText: string) => {
+        services.flowChartService
+            .fetchFlowChartListStateless(searchText)
+            .then((response: FlowChartListEntry[]) => {
+                setListItems(response);
+            });
+    };
 
-    const useCurrentListWithFilter = () => {
-        const fieldState = useFieldStateByUUid(UUID)
-        let listPositions = elements;
+    if(!mounted) {
+        updateList("");
 
-        if(fieldState) {
-            const filter = fieldState.value !== null 
-                            ? fieldState.value.toString() : '';
+        setSearchBox(services.wizardService.getInputComponent({
+            uuid: UUID,
+            formUuid: "",
+            controllerUrl: "",
+            type: InputType.TEXT,
+            defaultValue: "",
+            isRequired: false,
+            isVisible: true,
+            label: "Filter flowcharts",
+            name: "flowchart-list-filter",
+            placeholder: "Type name of the flowchart",
+            validators: [],
+            errors: []
+        }, (data: string) => updateList(data)));
 
-            listPositions = elements.filter(el => el.includes(filter))
-        }
-
-        return listPositions.map((position, id) => (
-            <div className='list-position' key={`list-position-${id}`}>
-                <p>{position}</p>
-            </div>
-        ))
+        setMouned(true);
     }
 
     return (
         <div className='flow-chart-list'>
             <div className='flow-chart-list-search'>
-                {getInputFieldComponent({
-                    label: 'Filter flowcharts',
-                    uuid: UUID,
-                    name: 'flowchart-filter',
-                    type: InputStyle.FLAT
-                })}
+                { searchBox ? searchBox : null}
             </div>
             <div className='flow-chart-list-elements'>
-                { useCurrentListWithFilter() }
+                {
+                    listItems.map((entry: FlowChartListEntry) => <FlowChartListElement data={entry} key={entry.id}/>)
+                }
             </div>
             <div className='add-new-flowchart'>
                 <Button mode="contained" onPress={() => alert('CLICK')}>
@@ -65,4 +60,4 @@ export const FlowChartList: React.FC = (props: any) => {
             </div>
         </div>
     )
-}
+};

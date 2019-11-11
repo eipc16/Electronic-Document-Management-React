@@ -6,8 +6,8 @@ import documentsReducer from './DocumentsReducer'
 
 const combinedReducers = (state = {}, action) => {
     return {
-        inputFields: inputFieldReducer(state.inputFields, action),
         form: formReducer(state.form, action, state.inputFields),
+        inputFields: inputFieldReducer(state.inputFields, action, state.form),
         blockWall: blockWallReducer(state.blockWall, action),
         flowChart: flowChartReducer(state.flowChart, action),
         documents: documentsReducer(state.documents, action)

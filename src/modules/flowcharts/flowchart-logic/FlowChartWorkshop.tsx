@@ -19,10 +19,6 @@ interface StateProps {
 type WorkShopProps = FlowChartWorkshopProps & StateProps;
 
 class FlowChartWorkshop extends React.Component<WorkShopProps, {}> {
-    constructor(props: WorkShopProps) {
-        super(props);
-    }
-
     render() {
         if(!this.props.chart) {
             return null;

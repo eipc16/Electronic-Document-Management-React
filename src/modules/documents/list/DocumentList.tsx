@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React from 'react';
 import MUIDataTable, { MUIDataTableOptions } from 'mui-datatables';
 
 import '../Documents.scss';
-import {createMuiTheme, MuiThemeProvider} from "@material-ui/core";
+import {MuiThemeProvider} from "@material-ui/core";
 import {customTheme} from "../details/styles/CustomDataTableTheme";
 import {connect} from "react-redux";
 import {existsAndNotNull} from "../../../utils/Utils";
@@ -21,11 +21,6 @@ interface StateProps {
 }
 
 class DocumentList extends  React.Component<DocumentListProps & StateProps> {
-
-    constructor(props: DocumentListProps & StateProps) {
-        super(props);
-    }
-
     setSelectedItem = (dataIndex: number) => {
         const selectedItem = this.props.selectedItem;
 

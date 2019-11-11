@@ -39,7 +39,7 @@ const DocumentDetails: React.FC<DocumentDetailsProps> = (props: DocumentDetailsP
                 options={options}
             />
             <div className='document-miniature-container'>
-                <img className='miniature' src={sample_document}/>
+                <img alt="document-miniature" className='miniature' src={sample_document}/>
             </div>
         </div>
     )

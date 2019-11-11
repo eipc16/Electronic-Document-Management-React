@@ -12,7 +12,7 @@ const initialState: FlowChartDTO = defaultFlowChart;
 
 const getNodeWithNewPortState = (node: FlowChartNode, newType: string, portId: string) => {
     const newPorts = node.ports.map(port => {
-        if(port.id == portId) {
+        if(port.id === portId) {
             return {
                 ...port,
                 properties: {

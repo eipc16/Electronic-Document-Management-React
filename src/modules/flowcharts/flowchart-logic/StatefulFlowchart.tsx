@@ -1,5 +1,5 @@
 import React, { Dispatch } from 'react'
-import { actions, FlowChart, IChart, IConfig, IFlowChartComponents } from "@mrblenny/react-flow-chart";
+import { actions, FlowChart, IChart, IConfig} from "@mrblenny/react-flow-chart";
 import { mapFlowChartFromDTO, mapFlowChartToDTO} from '../mapper/FlowChartMapper';
 import { FlowChartActions } from '../../../redux/types/FlowChart';
 import {updateFlowChart} from '../../../redux/actions/FlowChart';
@@ -75,46 +75,20 @@ class StatefulFlowchart extends React.Component<ComponentProps, FlowChartState> 
     };
 
     doubleClickHandler = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-          event.preventDefault();
-          if(this.props.config && this.props.config.readonly) {
-              return;
-          }
+        event.preventDefault();
+        if(this.props.config && this.props.config.readonly) {
+            return;
+        }
 
-          services.wizardService
-              .fetchWizardFromServer('http://localhost:8080/wizards/node-form');
+        console.log('??');
 
-          // request({
-          //     url: 'http://localhost:8080/wizards/node-form',
-          //     method: 'GET'
-          // }).then(
-          //
-          // ).catch(error => {
-          //     Alert.error(error.message);
-          // })
+        const formUuid = services.wizardService
+            .fetchWizardFromServer('http://localhost:8080/wizards/node-form',
+                (node: any) => this.addNode(node),
+                (updatedForm: any) => console.log(updatedForm)
+            );
 
-      // get form from sever, push results to state
-      // this.addNode({
-      //     id: `${x}`,
-      //     type: "input-output",
-      //     message: "HELLOASFSAFASFASFASFASFASFASFASFASFASFASFASFASFASFASFSAF_3",
-      //     department: "elo2",
-      //       position: {
-      //       x: 200, y: 200
-      //   },
-      //   ports: {
-      //     [`${x}-port1`]: {
-      //         id: `${x}-port1`,
-      //         type: "input"
-      //     },
-      //     [`${x}-port2`]: {
-      //           id: `${x}-port2`,
-      //           type: "output",
-      //           properties: {
-      //             result: 'correct'
-      //       }
-      //     }
-      //   }
-      // })
+        console.log(`Fetched form: ${formUuid}`)
     };
 
     setCanvasPosition = (x: number, y: number) => {

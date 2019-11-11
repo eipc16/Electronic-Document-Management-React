@@ -10,7 +10,7 @@ import {setLastSplitterAction} from "../../../redux/actions/Documents";
 import {ReduxStore} from "../../../utils/ReduxUtils";
 import {
     ChangeSplitProportionsAction,
-    changeSplitterState, hideSecondaryPane,
+    changeSplitterState,
     SPLITTER_MAX_SECONDARY_ACTION,
     SPLITTER_MIN_SECONDARY_ACTION
 } from "../SplitterUtils";

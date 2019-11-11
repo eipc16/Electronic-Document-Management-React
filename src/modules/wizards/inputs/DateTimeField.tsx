@@ -1,76 +1,35 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-
+import React from 'react'
+import {connect} from 'react-redux'
 import TextField from '@material-ui/core/TextField';
 
-import { setFieldValue, setFieldValidationResults } from '../../../redux/actions/index'
 import { InputFieldState } from '../../../redux/types/index'
+import {ReduxStore} from "../../../utils/ReduxUtils";
+import {DateTimeProps} from "./FieldInterfaces";
 
-import { Validator } from '../validators/Validator'
+import './styles/InputFields.scss'
+import {services} from "../../../context";
 
-import './InputFields.scss'
-import { format } from 'date-fns';
-import {useFieldStateByUUid, useRegisterField} from "../../../utils/ReduxUtils";
+type ComponentProps = DateTimeProps & { fieldData?: InputFieldState }
 
-export enum DateTimeType {
-    DATE = "date",
-    TIME = "time",
-    DATE_AND_TIME = "datetime-local"
-}
-
-interface FieldProps {
-    label: string;
-    uuid: string;
-    formUuid: string;
-    name: string;
-    type: DateTimeType;
-    defaultValue: string;
-    validator?: Validator;
-    required: boolean;
-}
-
-export interface SelectorProps {
-    label: string;
-    uuid: string;
-    name: string;
-    formUuid?: string;
-    type?: DateTimeType;
-    defaultValue?: Date;
-    validator?: Validator;
-    required?: boolean;
-}
-
-const DateTimeField: React.FC<FieldProps> = props => {
-    const dispatch = useDispatch()
-
-    useRegisterField({
-        uuid: props.uuid,
-        formUuid: props.formUuid,
-        label: props.label,
-        name: props.name,
-        type: props.type.valueOf(),
-        value: props.defaultValue ? props.defaultValue : '',
-        isValid: true,
-        errors: []
-    })
-
-    const fieldState: InputFieldState = useFieldStateByUUid(props.uuid)
-    
-    if(!fieldState) {
-        return null
+const DateTimeField: React.FC<ComponentProps> = (props: ComponentProps) => {
+    if(!props.fieldData) {
+        return null;
     }
-    
-    const {uuid, errors, isValid, label, value, name} = fieldState
+
+    const { uuid, label, value, errors, name, isRequired, isVisible } = props.fieldData;
+    const isValid = errors.length === 0;
 
     const setContentAndErrors = (value: string) => {
-
         const newDate = new Date(value);
+        services.wizardService.updateFieldValue(uuid, newDate);
 
-        dispatch(setFieldValue(uuid, newDate))
-        
+        if(props.onUpdate) {
+            props.onUpdate(value);
+        }
+
         if(props.validator) {
           const validatorList = props.validator.test(newDate)
-          dispatch(setFieldValidationResults(uuid, validatorList))
+          // dispatch(setFieldValidationResults(uuid, validatorList))
         }
     };
     
@@ -82,8 +41,10 @@ const DateTimeField: React.FC<FieldProps> = props => {
         });
     }
 
+    const className = `input-container date-picker ${!isVisible ? 'hidden' : ''}`;
+
     return (
-        <div className="input-container" key={name}>
+        <div className={className} key={name}>
             <TextField
                 id={uuid}
                 label={label}
@@ -93,29 +54,20 @@ const DateTimeField: React.FC<FieldProps> = props => {
                 onChange={(newDate) => setContentAndErrors(newDate.target.value)}
                 InputLabelProps={{
                     shrink: true,
-                    required: props.required
+                    required: isRequired
                 }}
                 error={!isValid}
                 helperText={errorMessages}
             />
         </div>
     )
-}
+};
 
-export default DateTimeField
+const mapStateToProps = (store: ReduxStore, ownProps: DateTimeProps) => {
+    return {
+        fieldData: store.inputFields[ownProps.uuid],
+        ...ownProps
+    }
+};
 
-export const getDateTimeComponent = (props: SelectorProps) => {
-    return (
-        <DateTimeField
-            key={props.uuid}
-            label={props.label}
-            uuid={props.uuid}
-            name={props.name}
-            formUuid={props.formUuid ? props.formUuid : ''}
-            type={props.type ? props.type : DateTimeType.DATE}
-            defaultValue={props.defaultValue ? format(new Date(props.defaultValue), 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd')}
-            validator={props.validator}
-            required={props.required ? props.required : false}
-        />
-    )
-  }
+export default connect(mapStateToProps, null)(DateTimeField);
