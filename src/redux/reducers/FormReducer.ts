@@ -18,6 +18,11 @@ const initialState: FormState = {
     fields: []
 };
 
+const sendForm = (state: FormState, formUuid: string, fields: InputFieldsState) => {
+    services.wizardService.sendForm(state, formUuid, fields);
+    return state;
+}
+
 export default function formReducer(state = initialState, action: FormActions, inputFields: InputFieldsState) {
     switch(action.type) {
         case REGISTER_FORM:
@@ -34,7 +39,7 @@ export default function formReducer(state = initialState, action: FormActions, i
         case HIDE_FORM:
             return {...state, visible: false};
         case SEND_FORM:
-            return services.wizardService.sendForm(state, action.formUuid, inputFields);
+            return sendForm(state, action.formUuid, inputFields);
         case FETCH_WIZARD_STARTED:
             return {
                 ...state,

@@ -16,7 +16,6 @@ const getPortColor = (portType: string) => {
 }
 
 interface PortCustomProps {
-    stateActions: any;
     flowChartState: FlowChartState;
 }
 

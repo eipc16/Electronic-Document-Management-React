@@ -88,27 +88,6 @@ $background-color: white;
     }
 }
 
-.flow-chart-list-search {
-    margin-left: 5px;
-    margin-right: 5px;
-    &.department-selector {
-        z-index: 999;
-        margin-bottom: 15px;
-    }
-}
-
-.flow-chart-list-elements {
-    padding: 1px;
-    overflow-y: scroll;
-    max-height: 75vh;
-}
-
-.flow-chart-action-list-elements {
-    padding: 1px;
-    overflow-y: scroll;
-    max-height: 75vh;
-}
-
 .add-new-flowchart,
 .add-new-action {
     position: absolute;

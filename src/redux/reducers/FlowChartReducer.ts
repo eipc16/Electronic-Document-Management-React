@@ -1,4 +1,5 @@
 import {
+    FETCH_FLOWCHART_BEGIN, FETCH_FLOWCHART_END,
     FlowChartActions,
     PortIdentifier,
     SET_FLOW_CHART_CALLBACKS,
@@ -72,6 +73,10 @@ export default function flowChartReducer(
             return getStateWithNewPortType(state, action.portData, action.newType);
         case SET_FLOW_CHART_CALLBACKS:
             return getStateWithCallbacks(state, action.callbacks);
+        case FETCH_FLOWCHART_BEGIN:
+            return state;
+        case FETCH_FLOWCHART_END:
+            return action.flowChart;
         default:
             return state
     }

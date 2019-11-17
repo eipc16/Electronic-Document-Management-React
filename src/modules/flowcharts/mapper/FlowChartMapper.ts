@@ -32,8 +32,8 @@ function linkFromString(linkString: string | null): FlowChartLink | null {
     }
 }
 
-function linkToString(link: FlowChartLink): string {
-    return `${link.id}_${link.from.nodeId}_${link.from.portId}_${link.to.nodeId}_${link.to.portId}`;
+function linkToString(link: FlowChartLink, result: string): string {
+    return `${link.id}_${link.from.nodeId}_${link.from.portId}_${link.to.nodeId}_${link.to.portId}_${result}`;
 }
 
 export const mapFlowChartFromDTO = (flowchartDTO: FlowChartDTO | null): FlowChartState => {
@@ -81,7 +81,7 @@ export const mapFlowChartFromDTO = (flowchartDTO: FlowChartDTO | null): FlowChar
                 [node.id]: {
                     id: node.id,
                     type: node.type,
-                    department: node.department,
+                    department: node.department === null ? null : node.department,
                     message: node.message,
                     position: {
                         x: node.position.x,
@@ -142,27 +142,29 @@ export const mapFlowChartToDTO = (flowchartState: FlowChartState) => {
 
         Object.keys(links).forEach(key => {
             const link = links[key]
-            const port = node.ports[link.from.portId]
+            const port = node.ports[link.from.portId];
             if(link.from.nodeId === node.id 
                     && port.type === 'output'
                     && port.properties 
                     && port.properties.result === keyword) {
-                result = linkToString(link)
+                result = linkToString(link, port.properties.result)
             }
-        })
+        });
         
         return result
-    }
+    };
 
     const mapNodes = (
             nodes: {[node: string]: FlowChartNodeState}, 
             links: {[link: string]: FlowChartLink}) => {
         return Object.keys(nodes).map(key => {
-            const currentNode: FlowChartNodeState = nodes[key]
+            const currentNode: FlowChartNodeState = nodes[key];
+
+            console.log(currentNode.department);
             return {
                 id: currentNode.id,
                 type: currentNode.type,
-                department: currentNode.department,
+                department: currentNode.department === null ? null : currentNode.department,
                 message: currentNode.message,
                 position: {
                     x: currentNode.position.x,

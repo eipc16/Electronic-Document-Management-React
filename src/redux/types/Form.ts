@@ -25,8 +25,9 @@ export enum FetchState {
 interface RegisterFormAction {
     type: typeof REGISTER_FORM;
     formData: FormState;
-    onSubmit: (response: void) => void;
-    onUpdate: (response: void) => void;
+    onSubmit?: (response: void) => void;
+    onUpdate?: (response: void) => void;
+    fieldInjector?: () => any;
 }
 
 interface SendFormAction {
@@ -49,8 +50,9 @@ interface FetchFormActionStarted {
 export interface FetchWizardAction {
     type: typeof FETCH_WIZARD;
     url: string;
-    onSubmit: (response: any) => void;
-    onUpdate: (response: any) => void;
+    onSubmit?: (response: any) => void;
+    onUpdate?: (response: any) => void;
+    fieldInjector?: () => any;
 }
 
 interface FetchWizardActionCompleted {

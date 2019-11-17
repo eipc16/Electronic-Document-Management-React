@@ -21,15 +21,10 @@ import {getCorrectInputComponent} from "../modules/wizards/WizardUtils";
 const WizardService = (store: Store) => {
 
     const fetchWizardFromServer = (url: string,
-                                   onSubmit: (response: any) => void,
-                                   onUpdate: (response: any) => void) => {
-        store.dispatch(fetchWizardAction(url, onSubmit, onUpdate));
-    };
-
-    const closeForm = (formUuid: string) => {
-        store.dispatch(hideForm());
-        store.dispatch(removeFormFields(formUuid));
-        store.dispatch(switchBlockWall(false))
+                                   onSubmit?: (response: any) => void,
+                                   onUpdate?: (response: any) => void,
+                                   fieldInjector?: () => any) => {
+        store.dispatch(fetchWizardAction(url, onSubmit, onUpdate, fieldInjector));
     };
 
     const updateFieldValue = (fieldUuid: string, value: FieldType, formUuid?: string) => {
@@ -44,14 +39,14 @@ const WizardService = (store: Store) => {
         return store.dispatch(showForm());
     };
 
-    const registerWizard = (form: FormProps, onSubmit: (response: any) => any, onUpdate: (response: any) => any) => {
+    const registerWizard = (form: FormProps, onSubmit: (response: any) => any, onUpdate: (response: any) => any, fieldInjector: () => any) => {
         store.dispatch(setCurrentForm({
             uuid: form.uuid,
             title: form.title,
             visible: false,
             endpoint: form.endpoint,
             fields: transformFieldsToNames(form.fields)
-        }, onSubmit, onUpdate));
+        }, onSubmit, onUpdate, fieldInjector));
         return form;
     };
 
@@ -81,6 +76,9 @@ const WizardService = (store: Store) => {
 
     const submitForm = async (formUuid: string) => {
         store.dispatch(sendFormAction(formUuid));
+    };
+
+    const closeForm = (formUuid: string) => {
         store.dispatch(hideForm());
         store.dispatch(removeFormFields(formUuid));
         store.dispatch(switchBlockWall(false))
@@ -111,8 +109,11 @@ const WizardService = (store: Store) => {
     };
 
     const sendForm = async (state: FormState, formUuid: string, inputFields: InputFieldsState) => {
-        const payload = prepareWizardPayload(formUuid, inputFields);
-        const targetUrl = `http://localhost:8080${state.endpoint}`;
+        console.log(state);
+        let payload = prepareWizardPayload(formUuid, inputFields);
+        payload = refStore.wizardInjector ? {...payload, ...refStore.wizardInjector()} : payload;
+        console.log(payload);
+        const targetUrl = `http://localhost:8080/${state.endpoint}`;
         request({
             url: targetUrl,
             method: RequestType.POST,
@@ -121,6 +122,7 @@ const WizardService = (store: Store) => {
             if(refStore.onWizardSubmit) {
                 refStore.onWizardSubmit(response);
             }
+            closeForm(formUuid);
         }).catch(error => {
             console.error(error);
             new NotificationBuilder()
@@ -129,10 +131,7 @@ const WizardService = (store: Store) => {
                 .show(error.message);
         });
 
-        return {
-            ...state,
-            visible: false
-        }
+        return state;
     };
 
     const prepareWizardControllerPayload = (state: InputFieldsState, field: InputFieldState, formState: FormState) => {
@@ -166,7 +165,7 @@ const WizardService = (store: Store) => {
         const constLastUpdatedField = state[fieldUuid];
         if(constLastUpdatedField && constLastUpdatedField.controllerUrl !== null) {
             const payload = prepareWizardControllerPayload(state, constLastUpdatedField, formState);
-            const targetUrl = `http://localhost:8080${constLastUpdatedField.controllerUrl}`;
+            const targetUrl = `http://localhost:8080/${constLastUpdatedField.controllerUrl}`;
             const response = await request({
                 url: targetUrl,
                 method: RequestType.POST,
@@ -202,7 +201,7 @@ const WizardService = (store: Store) => {
     };
 
     const fetchSearchBoxOptionsStateless = (optionsUrl: string, searchText: string) => {
-        const targetUrl = `http://localhost:8080${optionsUrl}?searchText=${searchText}`;
+        const targetUrl = `http://localhost:8080/${optionsUrl}?searchText=${searchText}`;
         return request({url: targetUrl, method: RequestType.GET})
             .then((response) => { return response;})
             .catch(error => {
@@ -218,9 +217,9 @@ const WizardService = (store: Store) => {
     };
 
     return Object.freeze({
-        fetchWizardFromServer, updateFieldValue, closeForm, sendForm, updateForm, submitForm, updateSearchBox,
+        fetchWizardFromServer, updateFieldValue, sendForm, updateForm, submitForm, updateSearchBox,
         registerWizard, registerFields, registerField, showWizard, transformFieldsToNames, fetchSearchBoxOptionsStateless,
-        getInputComponent
+        getInputComponent, closeForm
     })
 };
 

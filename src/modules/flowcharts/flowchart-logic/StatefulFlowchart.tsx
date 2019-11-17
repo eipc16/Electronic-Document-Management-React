@@ -1,13 +1,12 @@
 import React, { Dispatch } from 'react'
 import { actions, FlowChart, IChart, IConfig} from "@mrblenny/react-flow-chart";
-import { mapFlowChartFromDTO, mapFlowChartToDTO} from '../mapper/FlowChartMapper';
+import {mapFlowChartFromDTO, mapFlowChartToDTO} from '../mapper/FlowChartMapper';
 import { FlowChartActions } from '../../../redux/types/FlowChart';
 import {updateFlowChart} from '../../../redux/actions/FlowChart';
 import { connect } from 'react-redux';
 import {GestureResponderEvent} from 'react-native';
 import Alert from 'react-s-alert';
 import FlowChartActionButtons from "./FlowChartActionButtons";
-import {ReduxStore} from "../../../utils/ReduxUtils";
 import {FlowChartDTO, FlowChartState} from "../mapper/FlowChartInterfaces";
 import mapValues from "@mrblenny/react-flow-chart/src/container/utils/mapValues";
 import {CustomLink} from "../links/CustomLink";
@@ -16,6 +15,7 @@ import {CanvasOuterCustom} from "./FlowChartCanvas";
 import CustomNode from "../nodes/CustomNode";
 import {IOnLinkCompleteInput} from "@mrblenny/react-flow-chart/src";
 import {services} from "../../../context";
+import {ReduxStore} from "../../../utils/ReduxUtils";
 
 export interface FlowChartStateProps {
   initialValue: FlowChartState;
@@ -23,24 +23,32 @@ export interface FlowChartStateProps {
   readOnly?: boolean;
 }
 
+interface ReduxProps {
+    defaultState: FlowChartState;
+    onSaveFlowChart?: (state: FlowChartState) => void;
+}
+
 interface DispatchProps {
   updateState: (data: FlowChartDTO) => void;
 }
 
-interface StateProps {
-  defaultState: FlowChartState;
-  defaultClearState: FlowChartDTO | null;
-}
-
-type ComponentProps = FlowChartStateProps & DispatchProps & StateProps;
+type ComponentProps = FlowChartStateProps & DispatchProps & ReduxProps;
 
 class StatefulFlowchart extends React.Component<ComponentProps, FlowChartState> {
-    private stateActions = mapValues(actions, (func: any) =>
-        (...args: any) => this.setState(func(...args))) as typeof actions;
+    private stateActions: any;
 
     constructor(props: ComponentProps) {
       super(props);
-      this.state = this.props.defaultState;
+
+      this.state = this.props.initialValue;
+      this.stateActions = mapValues(actions, (func: any) =>
+          (...args: any) => this.setState(func(...args))) as typeof actions;
+    }
+
+    componentDidUpdate(prevProps: Readonly<ComponentProps>, prevState: Readonly<FlowChartState>, snapshot?: any): void {
+        if(prevProps.initialValue !== this.props.initialValue) {
+            this.setState(this.props.initialValue);
+        }
     }
 
     saveFlowChartState = (state: FlowChartState, callback: () => void) => {
@@ -60,15 +68,18 @@ class StatefulFlowchart extends React.Component<ComponentProps, FlowChartState> 
 
     useSaveState = (e: GestureResponderEvent) => {
       e.preventDefault();
-      this.saveFlowChartState(this.state, () => {
-        Alert.info(`Saved state for flowchart ${this.state.name}!`);
-      });
+      if(this.props.onSaveFlowChart) {
+          this.props.onSaveFlowChart(this.state);
+      }
+      // this.saveFlowChartState(this.state, () => {
+      //   Alert.info(`Saved state for flowchart ${this.state.name}!`);
+      // });
     };
 
     useClearState = (e: GestureResponderEvent) => {
       e.preventDefault();
       this.setState(
-          mapFlowChartFromDTO(this.props.defaultClearState),
+          this.props.defaultState,
           () => {
             Alert.info("Flowchart has been reset to the last saved state!");
           });
@@ -81,12 +92,10 @@ class StatefulFlowchart extends React.Component<ComponentProps, FlowChartState> 
         }
 
         console.log('??');
-
-        const formUuid = services.wizardService
-            .fetchWizardFromServer('http://localhost:8080/wizards/node-form',
-                (node: any) => this.addNode(node),
-                (updatedForm: any) => console.log(updatedForm)
-            );
+        const formUuid = services.flowChartService.fetchCreateNodeForm(
+            (node: any) => this.addNode(node),
+            (updatedForm: any) => console.log(updatedForm)
+        );
 
         console.log(`Fetched form: ${formUuid}`)
     };
@@ -128,10 +137,9 @@ class StatefulFlowchart extends React.Component<ComponentProps, FlowChartState> 
 
     public render () {
       let config: IConfig;
-      const chart = this.state;
 
-      if(!chart){
-        return null;
+      if(!this.props.initialValue){
+        return <div/>
       }
 
       if(!this.props.config) {
@@ -146,16 +154,16 @@ class StatefulFlowchart extends React.Component<ComponentProps, FlowChartState> 
         <div className='flowchart-container'>
               <div className='flowchart' onDoubleClick={this.doubleClickHandler}>
                 <FlowChart
-                chart={chart}
+                chart={this.state}
                 callbacks={this.stateActions}
                 Components={{
                     CanvasOuter: CanvasOuterCustom,
                     Node: CustomNode,
                     Port: (props) => {
-                        return <CustomPort {...props} stateActions={this.stateActions} flowChartState={chart} />
+                        return <CustomPort {...props} flowChartState={this.state} />
                     },
                     Link: (props) => {
-                        return <CustomLink {...props} stateActions={this.stateActions} flowChartState={chart} scale={scale} />
+                        return <CustomLink {...props} flowChartState={this.state} scale={scale} />
                     }
                 }}
                 config={{
@@ -175,11 +183,12 @@ class StatefulFlowchart extends React.Component<ComponentProps, FlowChartState> 
     }
 }
 
-const mapStateToProps = (store: ReduxStore, ownProps: FlowChartStateProps) => ({
-  defaultState: mapFlowChartFromDTO(store.flowChart),
-  defaultClearState: store.flowChart,
-  ...ownProps
-});
+const mapStateToProps = (store: ReduxStore, ownProps: FlowChartStateProps) => {
+    return {
+        defaultState: mapFlowChartFromDTO(store.flowChart),
+        ...ownProps
+    }
+}
 
 const mapDispatchToProps = (dispatch: Dispatch<FlowChartActions>, ownProps: FlowChartStateProps) => ({
     updateState: (data: FlowChartDTO) => dispatch(updateFlowChart(data)),

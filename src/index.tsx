@@ -26,6 +26,7 @@ import rootReducer from './redux/reducers';
 import { Store } from 'redux';
 import WizardProvider from "./modules/wizards/WizardProvider";
 import ActionBlocker from "./modules/actionblocker/ActionBlocker";
+import createBrowserHistory from "history/createBrowserHistory";
 
 const Root = (props: any) => {
     return (

@@ -66,7 +66,10 @@ export default function inputFieldReducer(state = initialState, action: InputFie
                 [action.payload.uuid]: action.payload
             };
         case UPDATE_FORM_FROM_CONTROLLER_COMPLETED:
-            return action.payload;
+            return {
+                ...state,
+                ...action.payload
+            };
         case SET_FIELD_VALUE:
             return updateFieldIfExists(action.fieldUuid, 'value', action.value);
         case SET_FIELD_STATE:

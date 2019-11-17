@@ -8,12 +8,12 @@ import {DepartmentNode} from "./DepartmentNode";
 import {FlowChartNodeState} from "../mapper/FlowChartInterfaces";
 
 function CustomNode({ node, children, ...otherProps }: INodeDefaultProps, ref: React.Ref<HTMLDivElement>) {
-    const getNodeWithTitle = (title: string, department: string | null, id?: string) => {
+    const getNodeWithTitle = (title: string, department: any | null, id?: string) => {
         const node = (
             <div className='node-data' key={id ? id : `${title}_${department}`}>
                 <div className='node-title'>{title}</div>
                 { department ? (
-                    <div className='node-department'>{department}</div>
+                    <div className='node-department'>{department !== null && department.name !== null ? department.name : null}</div>
                 ): null}
             </div>
         );

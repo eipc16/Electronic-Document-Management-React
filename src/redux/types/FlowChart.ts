@@ -29,4 +29,18 @@ export interface SetFlowChartCallbacksAction {
     callbacks: any;
 }
 
-export type FlowChartActions = UpdateFlowChartAction | SetPortType | SetFlowChartCallbacksAction;
+export interface FetchFlowChartStartAction {
+    type: typeof FETCH_FLOWCHART_BEGIN;
+}
+
+export interface FetchFlowChartAction {
+    type: typeof FETCH_FLOWCHART;
+    flowChartId: number;
+}
+
+export interface FetchFlowChartCompletedAction {
+    type: typeof FETCH_FLOWCHART_END;
+    flowChart: FlowChartDTO;
+}
+
+export type FlowChartActions = UpdateFlowChartAction | SetPortType | SetFlowChartCallbacksAction | FetchFlowChartAction | FetchFlowChartCompletedAction | FetchFlowChartStartAction;

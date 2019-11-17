@@ -3,7 +3,7 @@ import {
     FlowChartActions,
     SET_PORT_TYPE,
     PortIdentifier,
-    SET_FLOW_CHART_CALLBACKS
+    SET_FLOW_CHART_CALLBACKS, FETCH_FLOWCHART_BEGIN, FETCH_FLOWCHART, FETCH_FLOWCHART_END
 } from '../types/FlowChart';
 import {FlowChartDTO} from "../../modules/flowcharts/mapper/FlowChartInterfaces";
 
@@ -26,5 +26,25 @@ export function setFlowChartCallbacks(callbacks: any): FlowChartActions {
     return {
         type: SET_FLOW_CHART_CALLBACKS,
         callbacks: callbacks
+    }
+}
+
+export function fetchFlowChartBegin() {
+    return {
+        type: FETCH_FLOWCHART_BEGIN
+    }
+}
+
+export function fetchFlowChart(flowChartId: number) {
+    return {
+        type: FETCH_FLOWCHART,
+        flowChartId: flowChartId
+    }
+}
+
+export function fetchFlowChartComplete(flowChart: FlowChartDTO) {
+    return {
+        type: FETCH_FLOWCHART_END,
+        flowChart: flowChart
     }
 }

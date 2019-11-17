@@ -3,12 +3,11 @@ import React, {useState} from 'react';
 import '../FlowCharts.scss'
 import { Button } from 'react-native-paper';
 import {InputType} from "../../wizards/inputs/FieldInterfaces";
-import {ReduxStore, useFieldStateByUUid} from "../../../utils/ReduxUtils";
 import {services} from "../../../context";
 import FlowChartListElement, {FlowChartListEntry} from "./FlowChartListEntry";
-import {FieldType} from "../../../redux/types/InputField";
+import { withRouter } from 'react-router-dom';
 
-export const FlowChartList: React.FC = (props: any) => {
+const FlowChartList: React.FC = (props: any) => {
     const UUID = 'flowchart-list-filter-textbox';
     const [listItems, setListItems] = useState<FlowChartListEntry[]>([]);
     const [searchBox, setSearchBox] = useState(null);
@@ -19,7 +18,11 @@ export const FlowChartList: React.FC = (props: any) => {
             .fetchFlowChartListStateless(searchText)
             .then((response: FlowChartListEntry[]) => {
                 setListItems(response);
-            });
+            })
+    };
+
+    const handleCreateNewFlowChart = () => {
+        services.flowChartService.mainFlowChartPage(props.history);
     };
 
     if(!mounted) {
@@ -49,15 +52,17 @@ export const FlowChartList: React.FC = (props: any) => {
                 { searchBox ? searchBox : null}
             </div>
             <div className='flow-chart-list-elements'>
-                {
+                { listItems &&
                     listItems.map((entry: FlowChartListEntry) => <FlowChartListElement data={entry} key={entry.id}/>)
                 }
             </div>
             <div className='add-new-flowchart'>
-                <Button mode="contained" onPress={() => alert('CLICK')}>
+                <Button mode="contained" onPress={handleCreateNewFlowChart}>
                     NEW FLOWCHART
                 </Button>
             </div>
         </div>
     )
 };
+
+export default withRouter(FlowChartList);

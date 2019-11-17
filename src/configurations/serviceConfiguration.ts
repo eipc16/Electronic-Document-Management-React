@@ -1,6 +1,6 @@
 import WizardService from "../services/WizardService";
 import { Store } from "redux";
-import {FlowChartService} from "../modules/flowcharts/FlowChartService";
+import {FlowChartService} from "../services/FlowChartService";
 
 const configureWizardService = (store: Store) => {
     return WizardService(store);

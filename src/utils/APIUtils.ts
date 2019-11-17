@@ -21,6 +21,10 @@ interface RequestOption {
     body?: any;
 }
 
+const ACCESS_TOKEN = "access-token";
+
+localStorage.setItem(ACCESS_TOKEN, "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTc0MDIwOTkzLCJleHAiOjE1NzQ4ODQ5OTN9.I3Tp7nUbeeGLVobresRnaacbI9rnIRiTRj_GQ_R2N6hIfI2mHbC-8UWgxCVgS0_ltp18m7jZmm-kDxTlfV0oLQ");
+
 export const request = (options: RequestOption, content_type=ContentType.APPLICATION_JSON, response_type=ContentType.APPLICATION_JSON) => {
     const headers = new Headers();
 
@@ -36,9 +40,9 @@ export const request = (options: RequestOption, content_type=ContentType.APPLICA
         }
     }
 
-    // if(localStorage.getItem(ACCESS_TOKEN)) {
-    //     headers.append('Authorization', 'Bearer ' + localStorage.getItem(ACCESS_TOKEN))
-    // }
+    if(localStorage.getItem(ACCESS_TOKEN)) {
+        headers.append('Authorization', 'Bearer ' + localStorage.getItem(ACCESS_TOKEN))
+    }
 
     const defaults = {
         headers: headers

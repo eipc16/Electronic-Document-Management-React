@@ -22,7 +22,7 @@ export interface FlowChartLink {
 export interface FlowChartNode {
     id: string;
     type: string;
-    department: string;
+    department: any | null;
     message: string;
     position: {
         x: number;
@@ -46,7 +46,7 @@ export interface FlowChartDTO {
 export interface FlowChartNodeState {
     id: string;
     type: string;
-    department: string;
+    department: any | null;
     message: string;
     position: {
         x: number;

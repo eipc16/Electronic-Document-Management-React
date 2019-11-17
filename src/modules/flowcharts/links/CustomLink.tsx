@@ -38,7 +38,6 @@ const nodeHasLink = (flowChartState: FlowChartState, nodeId: string, portId: str
 }
 
 interface LinkCustomProps {
-    stateActions: any;
     flowChartState: FlowChartState;
     scale: number;
 }

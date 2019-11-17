@@ -8,12 +8,13 @@ import {
     SHOW_FORM
 } from "../types/Form";
 
-export function setCurrentForm(formData: FormState, onSubmit: (response: void) => void, onUpdate: (response: void) => void): FormActions {
+export function setCurrentForm(formData: FormState, onSubmit?: (response: void) => void, onUpdate?: (response: void) => void, fieldInjector?: () => any): FormActions {
     return {
         type: REGISTER_FORM,
         formData: formData,
         onSubmit: onSubmit,
-        onUpdate: onUpdate
+        onUpdate: onUpdate,
+        fieldInjector: fieldInjector
     }
 }
 
@@ -42,12 +43,14 @@ export function fetchWizardActionStarted(): FormActions {
     }
 }
 
-export function fetchWizardAction(url: string, onSubmit: (response: any) => void, onUpdate: (response: any) => void): FormActions {
+export function fetchWizardAction(url: string, onSubmit?: (response: any) => void,
+                                  onUpdate?: (response: any) => void, fieldInjector?: () => any): FormActions {
     return {
         type: FETCH_WIZARD,
         url: url,
         onSubmit: onSubmit,
-        onUpdate: onUpdate
+        onUpdate: onUpdate,
+        fieldInjector: fieldInjector
     }
 }
 

@@ -1,0 +1,22 @@
+.flow-chart-list-element {
+  display: flex;
+  flex-direction: column;
+  padding-left: 15px;
+  padding-right: 15px;
+  &:hover {
+    background-color: lightgray;
+  }
+
+  .flow-chart-name {
+    text-align: left;
+    font-size: 1.1rem;
+    color: darkgray;
+    font-weight: bold;
+    height: min-content;
+  }
+
+  .flow-chart-metadata {
+    text-align: right;
+    font-size: 0.8rem;
+  }
+}

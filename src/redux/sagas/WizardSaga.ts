@@ -41,8 +41,11 @@ function* fetchWizardFromServer(action: FetchWizardAction) {
             fetchState: FetchState.ERROR
         }
     });
-    yield put(setCurrentForm(data.form, action.onSubmit, action.onUpdate));
-    yield all(data.fields.map((field: any) => put(registerInputField(field))));
+    yield put(setCurrentForm(data.form, action.onSubmit, action.onUpdate, action.fieldInjector));
+    if(data.fields) {
+        yield all(data.fields.map((field: any) => put(registerInputField(field))));
+    }
+
     yield put(fetchWizardActionFinished(data.form, data.fetchState));
 }
 
