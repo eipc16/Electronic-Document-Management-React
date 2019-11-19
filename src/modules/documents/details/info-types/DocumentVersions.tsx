@@ -2,13 +2,14 @@ import React from "react";
 import {DocumentProps} from "./DocumentInfo";
 import {customTheme} from "../styles/CustomDataTableTheme";
 import {MuiThemeProvider} from "@material-ui/core";
-import MUIDataTable from "mui-datatables";
+import MUIDataTable, {MUIDataTableOptions} from "mui-datatables";
 import {ReduxStore} from "../../../../utils/ReduxUtils";
 import {connect} from "react-redux";
 import {DocumentTableData} from "../../../../redux/types/Documents";
 import {ErrorPage} from "../../../common/ErrorPage";
 
 import '../styles/DocumentVersions.scss'
+import {services} from "../../../../context";
 
 interface StateProps {
     versions?: DocumentTableData;
@@ -21,13 +22,17 @@ const DocumentVersions = (props: DocumentVerionsProps) => {
         return <ErrorPage />
     }
 
-    const options = {
+    const options: MUIDataTableOptions = {
         filterType: undefined,
         pagination: false,
         selectableRows: undefined,
         download: false,
         filter: false,
-        viewColumns: false
+        viewColumns: false,
+        onTableInit: (((action, tableState) => {
+            console.log(action, tableState);
+            services.documentService.fetchDocumentVersionsTableData(Number.parseInt(props.selectedItemId))
+        }))
     };
 
     return (

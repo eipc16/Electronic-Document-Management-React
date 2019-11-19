@@ -7,6 +7,8 @@ import {customTheme} from "../details/styles/CustomDataTableTheme";
 import {connect} from "react-redux";
 import {existsAndNotNull} from "../../../utils/Utils";
 import {ReduxStore} from "../../../utils/ReduxUtils";
+import {DocumentTableData} from "../../../redux/types/Documents";
+import {services} from "../../../context";
 
 
 export interface DocumentListProps {
@@ -18,6 +20,7 @@ export interface DocumentListProps {
 
 interface StateProps {
     selectedItem?: number | null;
+    documentList?: DocumentTableData;
 }
 
 class DocumentList extends  React.Component<DocumentListProps & StateProps> {
@@ -38,7 +41,7 @@ class DocumentList extends  React.Component<DocumentListProps & StateProps> {
             return [this.props.selectedItem as number];
         }
         return [];
-    }
+    };
 
     tableOptions: MUIDataTableOptions = {
         onRowsSelect: ((currentRowsSelected, rowsSelected) => {
@@ -50,17 +53,43 @@ class DocumentList extends  React.Component<DocumentListProps & StateProps> {
         }),
         selectableRows: 'single' || 'multiple',
         selectableRowsOnClick: true,
-        rowsSelected: this.selectedRows()
+        rowsSelected: this.selectedRows(),
+        onTableChange: ((action, tableState) => {
+            console.log(action, tableState);
+
+            switch(action) {
+                case 'changePage':
+                case 'search':
+                    services.documentService.fetchDocumentTableData(tableState.searchText !== null ? tableState.searchText : '',
+                        tableState.page, undefined, tableState.rowsPerPage, false)
+            }
+
+        }),
+        onTableInit: (((action, tableState) => {
+            console.log(action, tableState)
+            services.documentService.fetchDocumentTableData(tableState.searchText !== null ? tableState.searchText : '',
+                tableState.page, undefined, tableState.rowsPerPage, false)
+        }))
     };
 
+    /*
+        const fetchDocumentTableData = (searchText?: string, page?: number, sort?: any, limit?: number, archived?: boolean) => {
+     */
+
     render() {
+        if(!this.props.documentList || !this.props.documentList.table) {
+            return null;
+        }
+
+        const { title, data, columns } = this.props.documentList.table;
+
         return (
             <div className='document-list'>
                 <MuiThemeProvider theme={customTheme}>
                     <MUIDataTable
-                        title={"New table"}
-                        data={this.props.data}
-                        columns={this.props.columns}
+                        title={title}
+                        data={data}
+                        columns={columns}
                         options={this.tableOptions}
                     />
                 </MuiThemeProvider>
@@ -71,7 +100,8 @@ class DocumentList extends  React.Component<DocumentListProps & StateProps> {
 
 const mapStateToProps = (store: ReduxStore) => {
     return {
-        selectedItem: store.documents.documentId
+        selectedItem: store.documents.documentId,
+        documentList: store.documents.documentList
     }
 };
 

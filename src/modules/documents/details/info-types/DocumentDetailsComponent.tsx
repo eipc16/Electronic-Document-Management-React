@@ -1,5 +1,5 @@
 import React from "react";
-import MUIDataTable from "mui-datatables";
+import MUIDataTable, {MUIDataTableOptions} from "mui-datatables";
 
 import '../styles/DocumentDetails.scss';
 import {DocumentProps} from "./DocumentInfo";
@@ -8,6 +8,7 @@ import {connect} from "react-redux";
 import sample_document from '../../../../static/sample_document.png';
 import {DocumentTableData} from "../../../../redux/types/Documents";
 import {ReduxStore} from "../../../../utils/ReduxUtils";
+import {services} from "../../../../context";
 
 interface StateProps {
     details?: DocumentTableData;
@@ -21,13 +22,17 @@ const DocumentDetails: React.FC<DocumentDetailsProps> = (props: DocumentDetailsP
         return null;
     }
 
-    const options = {
+    const options: MUIDataTableOptions = {
         filterType: undefined,
         pagination: false,
         selectableRows: undefined,
         download: false,
         filter: false,
-        viewColumns: false
+        viewColumns: false,
+        onTableInit: (((action, tableState) => {
+            console.log(action, tableState);
+            services.documentService.fetchDocumentDetailsTableData(Number.parseInt(props.selectedItemId))
+        }))
     };
 
     return (

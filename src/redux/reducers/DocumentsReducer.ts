@@ -2,12 +2,19 @@ import {
     ADD_NEW_COMMENT,
     DocumentsActions,
     DocumentsState,
+    FETCH_DOCUMENT_DETAILS_BEGIN,
+    FETCH_DOCUMENT_DETAILS_COMPLETED,
+    FETCH_DOCUMENT_HISTORY_BEGIN,
+    FETCH_DOCUMENT_HISTORY_COMPLETED,
+    FETCH_DOCUMENT_LIST_BEGIN,
+    FETCH_DOCUMENT_LIST_COMPLETED, FETCH_DOCUMENT_VERSIONS_BEGIN, FETCH_DOCUMENT_VERSIONS_COMPLETED,
     SET_DOCUMENT_INFO_PAGE,
     SET_LAST_SPLITTER_ACTION,
     SET_SELECTED_DOCUMENT
 } from "../types/Documents";
 import {DOCUMENT_DETAILS_PAGE} from "../../modules/documents/details/DocumentInfo";
 import {SPLITTER_MAX_SECONDARY_ACTION} from "../../modules/documents/SplitterUtils";
+import {FetchState} from "../types/Form";
 
 const initialState: DocumentsState = {
     documentId: null,
@@ -15,48 +22,43 @@ const initialState: DocumentsState = {
     documentComments: [],
     documentDetails: {
         table: {
-            columns: [{
-                name: "Property",
-                options: {
-                    filter: false,
-                    sort: true
-                }
-            }, {
-                name: "Value",
-                options: {
-                    filter: false,
-                    sort: false
-                }
-            }],
-            data: [
-                ["One", "Two"],
-                ["Three", "Four"],
-                ["Five", "Six"],
-            ],
-            title: 'Document details'
+            columns: [],
+            data: [],
+            title: 'Document details',
+            count: 0,
+            page: 1,
+            state: FetchState.COMPLETED
         }
     },
     documentFlowChart: null,
     documentHistory: {
         table: {
-            columns: ["One", "Two", "Three"],
-            data: [
-                ["1", "2", "3"],
-                ["55", "Test", "4"],
-                ["tester", "43", "532"]
-            ],
-            title: 'Documents history'
+            columns: [],
+            data: [],
+            title: 'Documents history',
+            count: 0,
+            page: 1,
+            state: FetchState.COMPLETED
         }
     },
     documentVersions: {
         table: {
-            columns: ["One", "Two", "Three"],
-            data: [
-                ["1", "2", "3"],
-                ["55", "Test", "4"],
-                ["tester", "43", "532"]
-            ],
-            title: 'Documents versions'
+            columns: [],
+            data: [],
+            title: 'Documents versions',
+            count: 0,
+            page: 1,
+            state: FetchState.COMPLETED
+        }
+    },
+    documentList: {
+        table: {
+            columns: [],
+            data: [],
+            title: 'Document List',
+            count: 0,
+            page: 1,
+            state: FetchState.COMPLETED
         }
     },
     lastSplitterAction: SPLITTER_MAX_SECONDARY_ACTION
@@ -86,6 +88,66 @@ export default function documentsReducer(state = initialState, action: Documents
                     ...state.documentComments,
                     action.commentData
                 ]
+            };
+        case FETCH_DOCUMENT_LIST_BEGIN:
+            return {
+                ...state,
+                documentList: {
+                    table: {
+                        ...state.documentList.table,
+                        state: FetchState.ONGOING
+                    }
+                }
+            };
+        case FETCH_DOCUMENT_LIST_COMPLETED:
+            return {
+                ...state,
+                documentList: action.payload
+            };
+        case FETCH_DOCUMENT_DETAILS_BEGIN:
+            return {
+                ...state,
+                documentDetails: {
+                    table: {
+                        ...state.documentDetails.table,
+                        state: FetchState.ONGOING
+                    }
+                }
+            };
+        case FETCH_DOCUMENT_DETAILS_COMPLETED:
+            return {
+                ...state,
+                documentDetails: action.payload
+            };
+        case FETCH_DOCUMENT_HISTORY_BEGIN:
+            return {
+                ...state,
+                documentHistory: {
+                    table: {
+                        ...state.documentHistory.table,
+                        state: FetchState.ONGOING
+                    }
+                }
+            };
+        case FETCH_DOCUMENT_HISTORY_COMPLETED:
+            return {
+                ...state,
+                documentHistory: action.payload
+            };
+        case FETCH_DOCUMENT_VERSIONS_BEGIN:
+            return {
+                ...state,
+                documentVersions: {
+                    table: {
+                        ...state.documentVersions.table,
+                        state: FetchState.ONGOING
+                    }
+                }
+            };
+        case FETCH_DOCUMENT_VERSIONS_COMPLETED:
+            return {
+                ...state,
+                documentVersions: action.payload
             };
         default:
             return state
